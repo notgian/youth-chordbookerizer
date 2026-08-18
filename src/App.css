@@ -1,8 +1,23 @@
+:root {
+    --bg-primary: #1E1E1E;
+    --bg-secondary: #252526;
+    --bg-tertiary: #333333;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B3B3B3;
+
+    --accent-main: #007ACC;
+    --accent-light: #569CD6;
+
+    --font-primary: Inter, Avenir, Helvetica, Arial, sans-serif;
+}
+
+/* main app */
+
 body {
     margin: 0;
-    color: #fff;
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-    background-image: linear-gradient(to bottom, #020917, #101725);
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    background-color: var(--bg-primary);
 }
 
 .content {
@@ -12,6 +27,7 @@ body {
     text-align: center;
     flex-direction: column;
     justify-content: center;
+    padding: 2em
 }
 
 .content h1 {
@@ -19,8 +35,54 @@ body {
     font-weight: 700;
 }
 
-.content p {
-    font-size: 1.2rem;
-    font-weight: 400;
-    opacity: 0.5;
+/* .content p { */
+/*     font-size: 1.2rem; */
+/*     font-weight: 400; */
+/*     opacity: 0.5; */
+/* } */
+
+.content-area {
+    display: flex;
+    flex-direction: column;
+    padding: 2em;
+    background-color: var(--bg-secondary);
+    margin-bottom: 1em;
 }
+
+/* Input area */
+#inputarea textarea {
+    resize: none;
+    outline: none;
+    padding: 1em;
+    height: 60vh;
+}
+
+/* Output Area */
+#outputarea {
+    font-family: Arial;
+    display: block;
+    text-align: left;
+    background-color: white;
+    color: black;
+    line-height: 1.15;
+}
+
+/* #outputarea h1 { */
+/*     font-size: 18; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea h2 { */
+/*     font-size: 12; */
+/*     text-decoration: underline; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea h3 { */
+/*     font-size: 13; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea p { */
+/*     font-size: 11; */
+/* } */
