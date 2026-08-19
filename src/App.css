@@ -47,13 +47,18 @@ body {
     padding: 2em;
     background-color: var(--bg-secondary);
     margin-bottom: 1em;
+    gap: 10px;
 }
 
 /* Input area */
-#inputarea textarea {
+#inputarea input, textarea {
     resize: none;
     outline: none;
-    padding: 1em;
+    padding: 10px;
+    font-family: 'Courier New'
+}
+
+#inputarea textarea {
     height: 60vh;
 }
 

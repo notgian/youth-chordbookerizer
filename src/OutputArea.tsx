@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react'
+import type { CSSProperties, JSX } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 const outputstyles: Record<string, CSSProperties> = {
@@ -10,28 +11,72 @@ const outputstyles: Record<string, CSSProperties> = {
     section: {fontSize: '11pt', textDecoration: 'underline', margin: 0}
 }
 
+const containsChords = (line: String) => {
+    return false
+}
+
+const containsChordsSection = (line: String) => {
+    let lineTrim = line.trim()
+    if (lineTrim[0] == '[' && lineTrim[lineTrim.length-1] == ']') {
+        return true
+    }
+    return false
+}
+
+const renderPreview = () => {
+    const previewElements: JSX.Element[] = []
+
+    const chordsTextarea = document.getElementById("inputarea")?.getElementsByTagName("textarea").item(0)
+    if (chordsTextarea?.value) {
+        const chordLines = chordsTextarea.value.split('\n')
+        for (let line of chordLines) {
+            if (line.trim() == '') {
+                previewElements.push(<br />) 
+                continue
+            }
+            else if (containsChordsSection(line)) {
+                let lineTrim = line.trim()
+                lineTrim = lineTrim.substring(1, lineTrim.length-1)
+                lineTrim = lineTrim.toUpperCase()
+                previewElements.push(<p style={outputstyles.section}>{lineTrim}</p>) 
+                continue
+            }
+            else if (containsChords(line)) {
+                previewElements.push(<p style={outputstyles.chords}>{line}</p> ) 
+                continue
+            }
+            else {
+                previewElements.push(<p style={outputstyles.text}>{line}</p> ) 
+                continue
+            }
+        }
+    }
+
+    console.log(previewElements)
+    
+    return (previewElements)
+}
+
 const OutputArea = () => {
+    const [tick, setTick] = useState(0);
+
+    useEffect(() => {
+        const handleCustomEvent = (event: Event) => {
+            setTick((prev) => prev + 1);
+        };
+
+        window.addEventListener('update-preview', handleCustomEvent);
+
+        return () => {
+            window.removeEventListener('update-preview', handleCustomEvent);
+        };
+    }, []);
+
     return (
         <div id="outputarea" className="content-area">
-            <span className="output-preview">
-
-
-<h1 style={outputstyles.h1}>Saturday</h1>
-<h2 style={outputstyles.h2}>MORNING WORSHIP</h2>
-<h3 style={outputstyles.h3}>DEAR GOD</h3>
-<p style={outputstyles.text}>4/4</p>
-<p style={outputstyles.text}>Key: D#</p>
-<br />
-<p style={outputstyles.section}>INTRO</p>
-<p style={outputstyles.chords}>D#</p>
-<br/ >
-<p style={outputstyles.section}>VERSE 1         </p>
-<p style={outputstyles.chords}>     D#                                                    </p>
-<p style={outputstyles.text}>Dear God     </p>
-<p style={outputstyles.chords}>            Gm                                            G#                                                </p>
-<p style={outputstyles.text}>I've been trying awful hard to make You proud of me    	</p>
-
-            </span>
+        <span className="output-preview">
+        { renderPreview() }
+        </span>
         </div>
 
     )
