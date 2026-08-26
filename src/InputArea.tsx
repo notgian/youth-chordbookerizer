@@ -10,12 +10,12 @@ const InputArea = () => {
             <input 
                 onChange={updatePreview}
                 placeholder="Song Title" 
-                className=""
+                className="input-title"
             />
             <textarea 
                 onChange={updatePreview}
                 placeholder="Place the song chords here" 
-                className=""
+                className="input-chords"
             />
         </div>
     );

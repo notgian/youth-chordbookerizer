@@ -52,19 +52,41 @@ function subscribe(callback: () => void) {
     return () => window.removeEventListener('update-preview', callback);
 }
 
+let cachedSnapshot = {
+    title: '',
+    chords: ''
+}
+
 const getRawTextSnapshot = () => {
-    const textarea = document.getElementById("inputarea")?.getElementsByTagName("textarea").item(0);
-    return textarea?.value ?? '';
+    const titleInput = document.getElementById("inputarea")?.getElementsByClassName("input-title").item(0) as HTMLInputElement | null; 
+    const title = titleInput?.value ?? '';
+
+    const textarea = document.getElementById("inputarea")?.getElementsByClassName("input-chords").item(0) as HTMLTextAreaElement | null; 
+    const chords = textarea?.value ?? '';
+
+    if (cachedSnapshot.title !== title || cachedSnapshot.chords !== chords) {
+        cachedSnapshot = { title, chords };
+    }
+
+    return cachedSnapshot
 };
 
 // Component
 const OutputArea = () => {
-    const rawText = useSyncExternalStore(subscribe, getRawTextSnapshot);
+    const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
+    const titleText = snapshot.title;
+    const chordsText = snapshot.chords;
+
 
     const renderPreview = () => {
-        if (!rawText) return null;
+        if (!chordsText && !titleText) return null;
 
-        return rawText.split('\n').map((line, index) => {
+        let preview: React.JSX.Element[] = [];
+
+        if (titleText)
+            preview.push(<h3 key='title' style={outputstyles.h3}>{titleText}</h3>)
+
+        let chords = chordsText.split('\n').map((line, index) => {
             if (line.trim() === '') {
                 return <br key={index} />;
             }
@@ -77,6 +99,12 @@ const OutputArea = () => {
             }
             return <p key={index} style={outputstyles.text}>{line}</p>;
         });
+        
+        if (preview.length > 0)
+            preview.push(<br key='top-br' />);
+        preview = preview.concat(chords);
+
+        return preview;
     };
 
     return (
