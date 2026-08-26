@@ -27,7 +27,7 @@ body {
     text-align: center;
     flex-direction: column;
     justify-content: center;
-    padding: 2em
+    padding: 2em;
 }
 
 .content h1 {
@@ -35,22 +35,31 @@ body {
     font-weight: 700;
 }
 
-/* .content p { */
-/*     font-size: 1.2rem; */
-/*     font-weight: 400; */
-/*     opacity: 0.5; */
-/* } */
-
 .content-area {
     display: flex;
     flex-direction: column;
-    padding: 2em;
-    background-color: var(--bg-secondary);
     margin-bottom: 1em;
     gap: 10px;
 }
 
+
+.input-output-area {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background-color: var(--bg-secondary);
+    gap: 10px;
+    padding: 2em;
+    max-height: 70vh;
+}
+
+.input-output-area > * {
+    flex-grow: 1;
+    flex-basis:0
+}
+
 /* Input area */
+
 #inputarea input, textarea {
     resize: none;
     outline: none;
@@ -59,17 +68,48 @@ body {
 }
 
 #inputarea textarea {
-    height: 60vh;
+    min-height: 40vh;
+    field-sizing: content;
 }
 
 /* Output Area */
 #outputarea {
     font-family: Arial;
-    display: block;
     text-align: left;
-    background-color: white;
     color: black;
+    display: flex;
+}
+
+#outputarea > .output-controls {
+    display: flex;
+    flex-direction: row;
+    padding: 0em 1em;
+    color: var(--text-primary);
+}
+
+#outputarea > .output-preview {
+    background-color: white;
+    overflow: scroll;
     line-height: 1.15;
+    padding: 2em;
+    flex-grow: 1;
+}
+
+/* On smaller screens (e.g., mobile devices), switch to vertical stacking */
+@media (max-width: 768px) {
+    .input-output-area {
+        display: flex;
+        flex-direction: column;
+        background-color: var(--bg-secondary);
+        gap: 10px;
+        padding: 2em;
+        max-height: 140vh;
+    }
+
+    .input-output-area > * {
+        flex-grow: 0;
+        flex-basis:0
+    }
 }
 
 /* #outputarea h1 { */

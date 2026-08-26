@@ -7,8 +7,10 @@ const App = () => {
         <div className="content">
             <h1>Le Chordbookerizer</h1>
             <p>Lorem ipsum boi</p>
-            <InputArea />
-            <OutputArea />
+            <div className="input-output-area">
+                <InputArea />
+                <OutputArea />
+            </div>
         </div>
     );
 };

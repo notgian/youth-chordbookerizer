@@ -81,9 +81,12 @@ const OutputArea = () => {
 
     return (
         <div id="outputarea" className="content-area">
-        <span className="output-preview">
-        { renderPreview() }
-        </span>
+            <span className="output-controls">
+                <h2>Preview</h2>
+            </span>
+            <span className="output-preview">
+                { renderPreview() }
+            </span>
         </div>
 
     )
