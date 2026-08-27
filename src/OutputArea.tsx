@@ -37,13 +37,60 @@ const containsChords = (line: String) => {
     return chordRatio >= 0.5;
 }
 
+const chordSectionKeywords = [
+    'VERSE',
+    'PRECHORUS',
+    'PRE-CHORUS',
+    'PRE CHORUS',
+    'CHORUS',
+    'BRIDGE',
+    'INSTRUMENTAL',
+    'INTERLUDE',
+    'TAG',
+    'INTRO',
+    'OUTRO'
+]
+
+// Build the pattern for matching of each
+// chord section keyword
+const chordSectionKeywordPatterns: RegExp[] = []
+
+for (let keyword of chordSectionKeywords) {
+    const pattern = '(\\s[\\d]+)?';
+    chordSectionKeywordPatterns.push(new RegExp(keyword + pattern));
+}
+
+/**
+ * Checks if the given line is a chords section
+ * @param {string} line - the line to check whether it is a chord section
+ * @returns null if the line is not a chords section, or the chord section text if it is
+ */
 const containsChordsSection = (line: String) => {
     let lineTrim = line.trim()
     // Common Case: First and last char are []
     if (lineTrim[0] == '[' && lineTrim[lineTrim.length-1] == ']') {
-        return true
+        return lineTrim.substring(1, lineTrim.length - 1)
     }
-    return false
+    
+    // Second case: checks for any of the defined
+    // keywords and checks if majority of the line
+    // is of this keyword, which identifies the line as a
+    // chord section
+    for (let pattern of chordSectionKeywordPatterns) {
+        let matchedText = lineTrim.toUpperCase().match(new RegExp(pattern))
+
+        if (matchedText && matchedText.length > 0) {
+            // I only really care about one, since
+            // the line would supposedly only have one
+            const word = matchedText[0];
+            const ratio = word.length / lineTrim.length;
+            console.log(matchedText, word.length, lineTrim.length, ratio, pattern)
+            if (ratio >= 0.75)
+                return word
+        }
+    }
+
+    return null
 }
 
 // For the sync external store 
@@ -90,11 +137,12 @@ const OutputArea = () => {
             if (line.trim() === '') {
                 return <br key={index} />;
             }
-            if (containsChordsSection(line)) {
-                const label = line.trim().slice(1, -1).toUpperCase();
-                return <p key={index} style={outputstyles.section}>{label}</p>;
+            else if (containsChordsSection(line)) {
+                // const label = line.trim().slice(1, -1).toUpperCase();
+                const label: string = containsChordsSection(line) ?? '';
+                return <p key={index} style={outputstyles.section}>{label.toUpperCase()}</p>;
             }
-            if (containsChords(line)) {
+            else if (containsChords(line)) {
                 return <p key={index} style={outputstyles.chords}>{line}</p>;
             }
             return <p key={index} style={outputstyles.text}>{line}</p>;
