@@ -107,9 +107,17 @@ body {
     flex-basis: 0;
 }
 
-.input-time-signature input {
+.input-time-signature input[type=number] {
     width: 11pt;
     text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.input-time-signature input::-webkit-outer-spin-button,
+.input-time-signature input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .input-signature-block {

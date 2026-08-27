@@ -49,11 +49,15 @@ const InputArea = () => {
                         <input 
                             onChange={updatePreview}
                             className="input-signature input-signature-top"
+                            type="number"
+                            value="4"
                         />
                         <span className="input-signature-sep">/</span>
                         <input 
                             onChange={updatePreview}
                             className="input-signature input-signature-bot"
+                            type="number"
+                            value="4"
                         />
                     </span>
                 </span>
