@@ -50,12 +50,12 @@ body {
     background-color: var(--bg-secondary);
     gap: 10px;
     padding: 2em;
-    max-height: 70vh;
+    max-height: 100vh;
 }
 
 .input-output-area > * {
     flex-grow: 1;
-    flex-basis:0
+    flex-basis:0;
 }
 
 /* Input area */
@@ -70,6 +70,54 @@ body {
 #inputarea textarea {
     min-height: 40vh;
     field-sizing: content;
+}
+
+.input-key-and-signature {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input-key-and-signature > * {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.input-key-and-signature label {
+    font-weight: bolder;
+}
+
+.input-key{
+    display: flex;
+    align-items: center;
+}
+
+.input-key > * {
+    margin-right: 10px;  
+    margin-bottom: 1em;
+}
+
+.input-key select {
+    font-family: var(--font-primary);
+    padding: 0.8em 1em;
+    background-color: white;
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.input-time-signature input {
+    width: 11pt;
+    text-align: center;
+}
+
+.input-signature-block {
+    display: inline-block;
+}
+
+.input-signature-sep {
+    margin: 0 5pt;
 }
 
 /* Output Area */
@@ -109,6 +157,14 @@ body {
     .input-output-area > * {
         flex-grow: 0;
         flex-basis:0
+    }
+
+    .input-key-and-signature {
+        flex-direction: column;
+    }
+
+    .input-time-signature {
+        text-align: left;
     }
 }
 

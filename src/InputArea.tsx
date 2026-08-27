@@ -12,6 +12,52 @@ const InputArea = () => {
                 placeholder="Song Title" 
                 className="input-title"
             />
+            <span className="input-key-and-signature">
+                <span className="input-key">
+                    <label>Song Key: </label>
+                    <select
+                        onChange={updatePreview}
+                        className="input-key-name"
+                    >
+                        <option disabled selected>Key</option>
+                        <option>C</option>
+                        <option>C#/Db</option>
+                        <option>D</option>
+                        <option>D#/Eb</option>
+                        <option>E</option>
+                        <option>F</option>
+                        <option>F#/Gb</option>
+                        <option>G</option>
+                        <option>G#/Ab</option>
+                        <option>A</option>
+                        <option>A#/Bb</option>
+                        <option>B</option>
+                    </select>
+
+                    <select
+                        onChange={updatePreview}
+                        className="input-key-major-minor"
+                    >
+                        <option selected>Major</option>
+                        <option>Minor</option>
+                    </select>
+                </span>
+
+                <span className="input-time-signature">
+                    <label>Time Signature: </label>
+                    <span className="input-signature-block">
+                        <input 
+                            onChange={updatePreview}
+                            className="input-signature input-signature-top"
+                        />
+                        <span className="input-signature-sep">/</span>
+                        <input 
+                            onChange={updatePreview}
+                            className="input-signature input-signature-bot"
+                        />
+                    </span>
+                </span>
+            </span>
             <textarea 
                 onChange={updatePreview}
                 placeholder="Place the song chords here" 
