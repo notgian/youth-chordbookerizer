@@ -12,7 +12,7 @@ const InputArea = () => {
                 placeholder="Song Title" 
                 className="input-title"
             />
-            <span className="input-key-and-signature">
+            <span className="input-key-and-signature input-double-group">
                 <span className="input-key">
                     <label>Song Key: </label>
                     <select
@@ -59,6 +59,33 @@ const InputArea = () => {
                             type="number"
                             value="4"
                         />
+                    </span>
+                </span>
+            </span>
+
+            <span className="input-capo-and-transpose input-double-group">
+                <span className="input-capo-container">
+                    <label>Capo: </label>
+                    <input
+                        onChange={updatePreview}
+                        className="input-capo"
+                        type="number"
+                        placeholder="0"
+                        min="0"
+                    />
+                </span>
+
+                <span className="input-transpose-container">
+                    <label>Transpose: </label>
+                    <span id="transpose-number-display"></span>
+                    <input type="hidden" id="transpose-number" value="0" />
+                    <span className="input-transpose-block input-block">
+                        <button 
+                            className="input-transpose-button"
+                        >-</button> 
+                        <button 
+                            className="input-transpose-button"
+                        >+</button> 
                     </span>
                 </span>
             </span>

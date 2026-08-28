@@ -72,24 +72,26 @@ body {
     field-sizing: content;
 }
 
-.input-key-and-signature {
+.input-double-group {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-.input-key-and-signature > * {
+.input-double-group > * {
     flex-grow: 1;
     flex-basis: 0;
 }
 
-.input-key-and-signature label {
+.input-double-group label {
     font-weight: bolder;
 }
 
 .input-key{
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .input-key > * {
@@ -120,12 +122,24 @@ body {
     margin: 0;
 }
 
-.input-signature-block {
+.input-block {
     display: inline-block;
 }
 
 .input-signature-sep {
     margin: 0 5pt;
+}
+
+.input-transpose-container button {
+    background-color: white;
+    color: black;
+    font-family: 'Courier New';
+    outline: none;
+    font-size: 11pt;
+    padding: 4pt 8pt;
+    margin: 0 2pt;
+    font-weight: bolder;
+    border-radius: 5pt;
 }
 
 /* Output Area */
