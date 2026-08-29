@@ -11,6 +11,16 @@
     --font-primary: Inter, Avenir, Helvetica, Arial, sans-serif;
 }
 
+/* General Styles */
+
+.text-primary {
+    color: var(--text-primary)
+}
+
+.text-secondary {
+    color: var(--text-secondary)
+}
+
 /* main app */
 
 body {
