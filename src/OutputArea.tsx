@@ -143,8 +143,11 @@ const OutputArea = () => {
     const keySig = snapshot.keySig;
     const capo = snapshot.capo;
     const chordsText = snapshot.chords;
-
+    
+    // Output options
     const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
+    const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
+    const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
 
     const renderPreview = () => {
         let preview: React.JSX.Element[] = [];
@@ -175,7 +178,7 @@ const OutputArea = () => {
                 }
                 else if (containsChords(line)) {
                     if (showPianoChords) {
-                        let t = transposeLine(line, Number(capo))
+                        let t = transposeLine(line, Number(capo), showFlatsSongChords)
                         console.log(line, t)
                         return <p key={index} style={outputstyles.chords}>{t}</p>;
                     }
@@ -207,6 +210,29 @@ const OutputArea = () => {
                             onChange={(e) => setShowPianoChords(e.target.checked)}
                         />
                         <label>Preview Piano Chords</label>
+                    </span>
+                </span>
+
+
+                <span className="output-header-row">
+                    <span>
+                        <input
+                            id="input-preview-piano"
+                            type="checkbox" 
+                            checked={showFlatsKeyLabel}
+                            onChange={(e) => setShowFlatsKeyLabel(e.target.checked)}
+                        />
+                        <label>Flats in Song Key Label</label>
+                    </span>
+
+                    <span>
+                        <input
+                            id="input-preview-piano"
+                            type="checkbox" 
+                            checked={showFlatsSongChords}
+                            onChange={(e) => setShowFlatsSongChords(e.target.checked)}
+                        />
+                        <label>Flats in Chords</label>
                     </span>
                 </span>
             </span>

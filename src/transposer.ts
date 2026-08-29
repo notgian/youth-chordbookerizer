@@ -83,10 +83,10 @@ function flatToSharp(note: string): string {
  *
  * @param {string} chord - the chord to transpose
  * @param {number} transposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
- * @param {boolean} [outputFlat=true] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
+ * @param {boolean} [outputFlat=false] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
  * @returns {string|undefined} The transposed chord string, or `undefined` if the input chord is invalid.
  */
-function transposeChord(chord: string, transposeFactor: number, outputFlat: boolean = true): string | undefined {
+function transposeChord(chord: string, transposeFactor: number, outputFlat: boolean = false): string | undefined {
     // force trim the chord 
     chord = chord.trim()
     let note = chord.substring(0, 2)
@@ -120,7 +120,7 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
     note = NOTES_SHARPS[transposedOffset]
     
     // convert sharp back to flat if necessary
-    if (isAccidental && isFlat && !outputFlat) {
+    if (note.length > 1 && note[1] == '#' && outputFlat) {
         note = sharpToFlat(note);
     }
 
@@ -149,10 +149,10 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
  *
  * @param {string} chord - the chord to transpose
  * @param {number} transposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
- * @param {boolean} [outputFlat=true] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
+ * @param {boolean} [outputFlat=false] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
  * @returns {string|undefined} The transposed chord line string, or `undefined` if one of the input chords is invalid.
  */
-function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = true) {
+function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = false) {
     // get the converted chords of each first
     let startsWithSpace = false;
     let chords = line.split(/[\s]+/)

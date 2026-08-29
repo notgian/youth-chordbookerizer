@@ -52,6 +52,12 @@ test('Testing Edge Cases', () => {
     expect(transposeChord('X', 12)).toBe(undefined); 
 });
 
+test('Major Chords output flats', () => {
+    expect(transposeChord('C#', 2, true)).toBe('Eb');
+    expect(transposeChord('E', 2, true)).toBe('Gb');
+    expect(transposeChord('B', 2, true)).toBe('Db');
+});
+
 /* transposeLine tests for chord line transpositions */
 test('Normal Lines with a significant amount of space', () => {
     expect(transposeLine('C   Em   G', 2)).toBe('D   F#m  A')
