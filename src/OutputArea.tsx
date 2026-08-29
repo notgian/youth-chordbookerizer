@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, useState} from 'react';
 import './App.css'
+import { transposeLine } from './transposer';
 
 const outputstyles: Record<string, CSSProperties> = {
     h1: {fontSize: '18pt', textAlign: 'center', margin: 0},
@@ -143,6 +144,8 @@ const OutputArea = () => {
     const capo = snapshot.capo;
     const chordsText = snapshot.chords;
 
+    const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
+
     const renderPreview = () => {
         let preview: React.JSX.Element[] = [];
 
@@ -152,7 +155,7 @@ const OutputArea = () => {
             preview.push(<p key='key' style={outputstyles.text}>Key: {key}</p>)
         if (keySig)
             preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
-        if (capo)
+        if (capo && !showPianoChords)
             preview.push(<p key='keySig' style={outputstyles.text}>Capo {capo}</p>)
 
         // Add a space before chords IFF title/other stuff
@@ -171,6 +174,11 @@ const OutputArea = () => {
                     return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
                 }
                 else if (containsChords(line)) {
+                    if (showPianoChords) {
+                        let t = transposeLine(line, Number(capo))
+                        console.log(line, t)
+                        return <p key={index} style={outputstyles.chords}>{t}</p>;
+                    }
                     return <p key={index} style={outputstyles.chords}>{line}</p>;
                 }
                 return <p key={index} style={outputstyles.text}>{line}</p>;
@@ -192,7 +200,12 @@ const OutputArea = () => {
 
                 <span className="output-header-row">
                     <span>
-                        <input type="checkbox" />
+                        <input
+                            id="input-preview-piano"
+                            type="checkbox" 
+                            checked={showPianoChords}
+                            onChange={(e) => setShowPianoChords(e.target.checked)}
+                        />
                         <label>Preview Piano Chords</label>
                     </span>
                 </span>

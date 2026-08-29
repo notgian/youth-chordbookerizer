@@ -87,6 +87,8 @@ function flatToSharp(note: string): string {
  * @returns {string|undefined} The transposed chord string, or `undefined` if the input chord is invalid.
  */
 function transposeChord(chord: string, transposeFactor: number, outputFlat: boolean = true): string | undefined {
+    // force trim the chord 
+    chord = chord.trim()
     let note = chord.substring(0, 2)
     let isAccidental = true;
     let isFlat = false;
@@ -136,14 +138,20 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
  */
 function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = true) {
     // get the converted chords of each first
-    const initialChords = line.split(/[\s]+/)
+    let startsWithSpace = false;
+    let chords = line.split(/[\s]+/)
+    if (chords.length > 0 && chords[0].trim() === "") {
+        chords = chords.splice(1)
+        startsWithSpace = true;
+    }
+    const initialChords = chords
     const convertedChords = initialChords.map(chord => transposeChord(chord, transposeFactor, outputFlat))
     
     let fullMatch = true
     for (let i = 0; i < initialChords.length; i++) {
         // if one of the converted chords is undefined, return early
         if (convertedChords[i] == undefined)
-            return undefined
+            return initialChords
         else if (initialChords[i] != convertedChords[i]) {
             fullMatch = false;
             break;
@@ -152,14 +160,15 @@ function transposeLine(line: string, transposeFactor: number, outputFlat: boolea
     
     // return the same line if the transposed chords are exactly the same
     if (fullMatch)
-        return line
+        return line;
 
-    const spaces = line.match(/[\s]+/g)
-    let newLine = ""
+    const spaces = line.match(/[\s]+/g);
+    let newLine = startsWithSpace && spaces ? spaces[0] : "";
+    const spaceOffset = startsWithSpace ? 1: 0;
     for (let i = 0; i < convertedChords.length; i++) {
         const currChord = convertedChords[i] ?? ''
         const currPreChord = initialChords[i] ?? ''
-        const currSpace = spaces && spaces[i] ? spaces[i] : ' ';
+        const currSpace = spaces && spaces[i + spaceOffset] ? spaces[i + spaceOffset] : ' ';
         const spaceDiff = currPreChord.length - currChord.length ;
         if (spaceDiff == 0)
             newLine += currChord + currSpace

@@ -37,6 +37,10 @@ test('7th Chords +6', () => {
     expect(transposeChord('Gmaj7', 6)).toBe('C#maj7'); 
 });
 
+test('Long space before chord', () => {
+    expect(transposeChord('             C', 2)).toBe('D'); 
+});
+
 test('Testing Edge Cases', () => {
     expect(transposeChord('E', 0)).toBe('E'); 
     expect(transposeChord('E', 12)).toBe('E'); 
