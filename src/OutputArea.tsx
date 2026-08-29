@@ -102,6 +102,7 @@ function subscribe(callback: () => void) {
 let cachedSnapshot = {
     title: '',
     key: '',
+    keySig: '',
     chords: ''
 }
 
@@ -114,13 +115,16 @@ const getRawTextSnapshot = () => {
 
     const keyName = document.getElementById("input-key-name") as HTMLSelectElement | null; 
     const keyType = document.getElementById("input-key-type") as HTMLSelectElement | null; 
-    const key = keyName && keyType ? keyName.value.trim() + ' ' + keyType.value.trim() : '';
-
-    console.log(key)
+    const key = keyName && keyName.value.trim() && keyType ? keyName.value.trim() + ' ' + keyType.value.trim() : '';
+    
+    const keySigTop = document.getElementById("input-signature-top") as HTMLSelectElement | null; 
+    const keySigBot = document.getElementById("input-signature-bot") as HTMLSelectElement | null; 
+    const keySig = keySigTop && keySigTop.value.trim() && keySigBot && keySigBot.value.trim() ? 
+        keySigTop.value.trim() + '/' + keySigBot.value.trim() : '';
     
     let cs = cachedSnapshot;
-    if (cs.title !== title || cs.chords !== chords || cs.key !== key) {
-        cachedSnapshot = { title, key, chords };
+    if (cs.title !== title || cs.chords !== chords || cs.key !== key || cs.keySig !== keySig ) {
+        cachedSnapshot = { title, key, chords, keySig };
     }
 
     return cachedSnapshot
@@ -131,6 +135,7 @@ const OutputArea = () => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
     const key = snapshot.key;
+    const keySig = snapshot.keySig;
     const chordsText = snapshot.chords;
 
     const renderPreview = () => {
@@ -140,6 +145,8 @@ const OutputArea = () => {
             preview.push(<h3 key='title' style={outputstyles.h3}>{titleText}</h3>)
         if (key) 
             preview.push(<p key='key' style={outputstyles.text}>Key: {key}</p>)
+        if (keySig)
+            preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
 
         // Add a space before chords IFF title/other stuff
         // precede the chords

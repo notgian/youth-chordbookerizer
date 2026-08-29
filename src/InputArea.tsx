@@ -19,7 +19,7 @@ const InputArea = () => {
                         onChange={updatePreview}
                         id="input-key-name"
                     >
-                        <option disabled selected>Key</option>
+                        <option value="" disabled selected>Key</option>
                         <option value="C">C</option>
                         <option value="C#">C#/Db</option>
                         <option value="D">D</option>
@@ -48,16 +48,16 @@ const InputArea = () => {
                     <span className="input-signature-block">
                         <input 
                             onChange={updatePreview}
-                            className="input-signature input-signature-top"
+                            className="input-signature"
+                            id="input-signature-top"
                             type="number"
-                            value="4"
                         />
                         <span className="input-signature-sep">/</span>
                         <input 
                             onChange={updatePreview}
-                            className="input-signature input-signature-bot"
+                            className="input-signature"
+                            id="input-signature-bot"
                             type="number"
-                            value="4"
                         />
                     </span>
                 </span>
