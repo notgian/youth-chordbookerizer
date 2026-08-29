@@ -68,7 +68,7 @@ const InputArea = () => {
                     <label>Capo: </label>
                     <input
                         onChange={updatePreview}
-                        className="input-capo"
+                        id="input-capo"
                         type="number"
                         placeholder="0"
                         min="0"

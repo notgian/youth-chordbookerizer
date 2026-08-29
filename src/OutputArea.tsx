@@ -103,6 +103,7 @@ let cachedSnapshot = {
     title: '',
     key: '',
     keySig: '',
+    capo: '',
     chords: ''
 }
 
@@ -121,10 +122,13 @@ const getRawTextSnapshot = () => {
     const keySigBot = document.getElementById("input-signature-bot") as HTMLSelectElement | null; 
     const keySig = keySigTop && keySigTop.value.trim() && keySigBot && keySigBot.value.trim() ? 
         keySigTop.value.trim() + '/' + keySigBot.value.trim() : '';
+
+    const capoInput = document.getElementById("input-capo") as HTMLInputElement | null; 
+    const capo = capoInput && Number(capoInput.value?.trim()) > 0 ? capoInput.value.trim() : '';
     
     let cs = cachedSnapshot;
-    if (cs.title !== title || cs.chords !== chords || cs.key !== key || cs.keySig !== keySig ) {
-        cachedSnapshot = { title, key, chords, keySig };
+    if (cs.title !== title || cs.chords !== chords || cs.key !== key || cs.keySig !== keySig || cs.capo !== capo ) {
+        cachedSnapshot = { title, key, chords, keySig, capo};
     }
 
     return cachedSnapshot
@@ -136,17 +140,20 @@ const OutputArea = () => {
     const titleText = snapshot.title;
     const key = snapshot.key;
     const keySig = snapshot.keySig;
+    const capo = snapshot.capo;
     const chordsText = snapshot.chords;
 
     const renderPreview = () => {
         let preview: React.JSX.Element[] = [];
 
         if (titleText)
-            preview.push(<h3 key='title' style={outputstyles.h3}>{titleText}</h3>)
+            preview.push(<h3 key='title' style={outputstyles.h3}>{capo ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
         if (key) 
             preview.push(<p key='key' style={outputstyles.text}>Key: {key}</p>)
         if (keySig)
             preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
+        if (capo)
+            preview.push(<p key='keySig' style={outputstyles.text}>Capo {capo}</p>)
 
         // Add a space before chords IFF title/other stuff
         // precede the chords
