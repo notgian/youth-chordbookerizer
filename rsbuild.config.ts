@@ -6,5 +6,8 @@ export default defineConfig({
     plugins: [pluginReact()],
     html: {
         title: 'YOUTH Chordbookerizer'
+    },
+    output: {
+        assetPrefix: '/youth-chordbookerizer/',
     }
 });
