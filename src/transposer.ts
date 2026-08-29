@@ -124,7 +124,23 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
         note = sharpToFlat(note);
     }
 
-    const chordSuffix = chord.substring(isAccidental ? 2 : 1);
+    let chordSuffix = chord.substring(isAccidental ? 2 : 1);
+
+    // if there is a bass note, transpose this too
+    if (chordSuffix.includes('/')) {
+        const slashSplit = chordSuffix.split('/')
+        if (slashSplit.length > 1 && (NOTES_SHARPS.includes(slashSplit[1]) || NOTES_FLATS.includes(slashSplit[1]))) {
+            let bassNote = slashSplit[1];
+
+            let transposedOffset = (NOTES_SHARPS.indexOf(bassNote) + transposeFactor) % 12;
+            if (transposedOffset < 0)
+                transposedOffset += 12;
+
+            bassNote = NOTES_SHARPS[transposedOffset]
+            chordSuffix = slashSplit[0] + '/' + bassNote
+        }
+        
+    }
     return note + chordSuffix;
 } 
 

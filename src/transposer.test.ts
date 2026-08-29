@@ -41,6 +41,11 @@ test('Long space before chord', () => {
     expect(transposeChord('             C', 2)).toBe('D'); 
 });
 
+test('Chords with bass', () => {
+    expect(transposeChord('G/B', 2)).toBe('A/C#'); 
+    expect(transposeChord('C/E', 3)).toBe('D#/G'); 
+});
+
 test('Testing Edge Cases', () => {
     expect(transposeChord('E', 0)).toBe('E'); 
     expect(transposeChord('E', 12)).toBe('E'); 
