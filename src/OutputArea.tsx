@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useSyncExternalStore, useState} from 'react';
 import './App.css'
-import { sharpToFlat, transposeLine } from './transposer';
+import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
 
 const outputstyles: Record<string, CSSProperties> = {
     h1: {fontSize: '18pt', textAlign: 'center', margin: 0},
@@ -168,7 +168,7 @@ const OutputArea = () => {
         if (keySig)
             preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
         if (capo && !showPianoChords)
-            preview.push(<p key='keySig' style={outputstyles.text}>Capo {capo}</p>)
+            preview.push(<p key='capo' style={outputstyles.text}>Capo {capo}</p>)
 
         // Add a space before chords IFF title/other stuff
         // precede the chords
@@ -186,12 +186,21 @@ const OutputArea = () => {
                     return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
                 }
                 else if (containsChords(line)) {
-                    if (showPianoChords) {
+                    if (showPianoChords && Number(capo) > 0) {
                         let t = transposeLine(line, Number(capo), showFlatsSongChords)
-                        console.log(line, t)
                         return <p key={index} style={outputstyles.chords}>{t}</p>;
                     }
-                    return <p key={index} style={outputstyles.chords}>{line}</p>;
+                    else if (showFlatsSongChords) {
+                        let flatsLine = line;
+                        let tokens = flatsLine.split(/[\s]+/g);
+                        for (let token of tokens) {
+                            if (token === "" || token.length < 1) continue
+                            flatsLine = flatsLine.replace(token, sharpToFlatChord(token))
+                        }
+                        return <p key={index} style={outputstyles.chords}>{flatsLine}</p>;
+                    }
+                    else
+                        return <p key={index} style={outputstyles.chords}>{line}</p>;
                 }
                 return <p key={index} style={outputstyles.text}>{line}</p>;
             });

@@ -54,6 +54,28 @@ function sharpToFlat(note: string): string {
 }
 
 /**
+ * Converts a sharp chord to a flat
+ *
+ * @param {string} note - The chord to convert from sharp to flat
+ * @return {string} The converted chord.
+ */
+function sharpToFlatChord(chord: string): string {
+    chord = chord.trim()
+    if (chord[1] != "#") 
+        return chord
+
+    let chordNote = chord.substring(0, 2)
+    let newChord = chord.replace(chordNote, sharpToFlat(chordNote))
+
+    // Handle bass note
+    let slashSep = newChord.split('/')
+    if (slashSep.length > 1)
+        return slashSep[0] + '/' + sharpToFlat(slashSep[1])
+
+    return newChord
+}
+
+/**
  * Converts a flat note to a sharp
  *
  * @param {string} note - The note to convert from flat to sharp
@@ -74,6 +96,28 @@ function flatToSharp(note: string): string {
         default:
             return note;
     }
+}
+
+/**
+ * Converts a sharp chord to a flat
+ *
+ * @param {string} note - The chord to convert from sharp to flat
+ * @return {string} The converted chord.
+ */
+function flatToSharpChord(chord: string): string {
+    chord = chord.trim()
+    if (chord[1] != "#") 
+        return chord
+
+    let chordNote = chord.substring(0, 2)
+    let newChord = chord.replace(chordNote, flatToSharp(chordNote))
+
+    // Handle bass note
+    let slashSep = newChord.split('/')
+    if (slashSep.length > 1)
+        return slashSep[0] + '/' + flatToSharp(slashSep[1])
+
+    return newChord
 }
 
 // Main transposition functions
@@ -209,5 +253,7 @@ export {
     transposeChord,
     transposeLine,
     flatToSharp,
+    flatToSharpChord,
     sharpToFlat,
+    sharpToFlatChord,
 }
