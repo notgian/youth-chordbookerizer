@@ -1,5 +1,5 @@
 import { expect, test } from '@rstest/core';
-import { transposeChord } from './transposer.ts'
+import { transposeChord, transposeLine} from './transposer.ts'
 
 /* transposeChord tests for individual chord transpositions */
 test('Major Chords up a whole step (+2)', () => {
@@ -42,3 +42,15 @@ test('Testing Edge Cases', () => {
     expect(transposeChord('E', 12)).toBe('E'); 
     expect(transposeChord('X', 12)).toBe(undefined); 
 });
+
+/* transposeLine tests for chord line transpositions */
+test('Normal Lines with a significant amount of space', () => {
+    expect(transposeLine('C   Em   G', 2)).toBe('D   F#m  A')
+    expect(transposeLine('B   C#m   E   F#', -4)).toBe('G   Am    C   D')
+
+})
+
+test('Normal Lines with only single spaces inbetween', () => {
+    expect(transposeLine('C Em G', 2)).toBe('D F#m A')
+    expect(transposeLine('B C#m E F#', -4)).toBe('G Am  C D')
+})

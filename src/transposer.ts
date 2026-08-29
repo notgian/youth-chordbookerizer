@@ -126,9 +126,54 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
     return note + chordSuffix;
 } 
 
-function transposeLine(line: string, transposeFactor: number) {
-    if (transposeFactor % 12 == 0)
+/** 
+ * Transposes an line of chords, doing its best to preserve spacing, given a transposition factor (one unit of this factor is equivalent to a half step)
+ *
+ * @param {string} chord - the chord to transpose
+ * @param {number} transposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
+ * @param {boolean} [outputFlat=true] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
+ * @returns {string|undefined} The transposed chord line string, or `undefined` if one of the input chords is invalid.
+ */
+function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = true) {
+    // get the converted chords of each first
+    const initialChords = line.split(/[\s]+/)
+    const convertedChords = initialChords.map(chord => transposeChord(chord, transposeFactor, outputFlat))
+    
+    let fullMatch = true
+    for (let i = 0; i < initialChords.length; i++) {
+        // if one of the converted chords is undefined, return early
+        if (convertedChords[i] == undefined)
+            return undefined
+        else if (initialChords[i] != convertedChords[i]) {
+            fullMatch = false;
+            break;
+        }
+    }
+    
+    // return the same line if the transposed chords are exactly the same
+    if (fullMatch)
         return line
+
+    const spaces = line.match(/[\s]+/g)
+    let newLine = ""
+    for (let i = 0; i < convertedChords.length; i++) {
+        const currChord = convertedChords[i] ?? ''
+        const currPreChord = initialChords[i] ?? ''
+        const currSpace = spaces && spaces[i] ? spaces[i] : ' ';
+        const spaceDiff = currPreChord.length - currChord.length ;
+        if (spaceDiff == 0)
+            newLine += currChord + currSpace
+        else {
+            let newSpaceLen = currSpace.length + spaceDiff
+            // require that there be at least 1 space
+            if (newSpaceLen <= 0)
+                newSpaceLen = 1
+
+            newLine += currChord + ' '.repeat(newSpaceLen)
+        }
+    }
+
+    return newLine.trimEnd();
 }
 
 
