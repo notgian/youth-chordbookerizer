@@ -10,36 +10,36 @@ const InputArea = () => {
             <input 
                 onChange={updatePreview}
                 placeholder="Song Title" 
-                className="input-title"
+                id="input-title"
             />
             <span className="input-key-and-signature input-double-group">
                 <span className="input-key">
                     <label>Song Key: </label>
                     <select
                         onChange={updatePreview}
-                        className="input-key-name"
+                        id="input-key-name"
                     >
                         <option disabled selected>Key</option>
-                        <option>C</option>
-                        <option>C#/Db</option>
-                        <option>D</option>
-                        <option>D#/Eb</option>
-                        <option>E</option>
-                        <option>F</option>
-                        <option>F#/Gb</option>
-                        <option>G</option>
-                        <option>G#/Ab</option>
-                        <option>A</option>
-                        <option>A#/Bb</option>
-                        <option>B</option>
+                        <option value="C">C</option>
+                        <option value="C#">C#/Db</option>
+                        <option value="D">D</option>
+                        <option value="D#">D#/Eb</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="F#">F#/Gb</option>
+                        <option value="G">G</option>
+                        <option value="G#">G#/Ab</option>
+                        <option value="A">A</option>
+                        <option value="A#">A#/Bb</option>
+                        <option value="B">B</option>
                     </select>
 
                     <select
                         onChange={updatePreview}
-                        className="input-key-major-minor"
+                        id="input-key-type"
                     >
-                        <option selected>Major</option>
-                        <option>Minor</option>
+                        <option value="Major" selected>Major</option>
+                        <option value="Minor">Minor</option>
                     </select>
                 </span>
 
@@ -92,7 +92,7 @@ const InputArea = () => {
             <textarea 
                 onChange={updatePreview}
                 placeholder="Place the song chords here" 
-                className="input-chords"
+                id="input-chords"
             />
         </div>
     );

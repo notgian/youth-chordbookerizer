@@ -101,18 +101,26 @@ function subscribe(callback: () => void) {
 
 let cachedSnapshot = {
     title: '',
+    key: '',
     chords: ''
 }
 
 const getRawTextSnapshot = () => {
-    const titleInput = document.getElementById("inputarea")?.getElementsByClassName("input-title").item(0) as HTMLInputElement | null; 
+    const titleInput = document.getElementById("input-title") as HTMLInputElement | null; 
     const title = titleInput?.value ?? '';
 
-    const textarea = document.getElementById("inputarea")?.getElementsByClassName("input-chords").item(0) as HTMLTextAreaElement | null; 
+    const textarea = document.getElementById("input-chords") as HTMLTextAreaElement | null; 
     const chords = textarea?.value ?? '';
 
-    if (cachedSnapshot.title !== title || cachedSnapshot.chords !== chords) {
-        cachedSnapshot = { title, chords };
+    const keyName = document.getElementById("input-key-name") as HTMLSelectElement | null; 
+    const keyType = document.getElementById("input-key-type") as HTMLSelectElement | null; 
+    const key = keyName && keyType ? keyName.value.trim() + ' ' + keyType.value.trim() : '';
+
+    console.log(key)
+    
+    let cs = cachedSnapshot;
+    if (cs.title !== title || cs.chords !== chords || cs.key !== key) {
+        cachedSnapshot = { title, key, chords };
     }
 
     return cachedSnapshot
@@ -122,35 +130,40 @@ const getRawTextSnapshot = () => {
 const OutputArea = () => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
+    const key = snapshot.key;
     const chordsText = snapshot.chords;
 
-
     const renderPreview = () => {
-        if (!chordsText && !titleText) return null;
-
         let preview: React.JSX.Element[] = [];
 
         if (titleText)
             preview.push(<h3 key='title' style={outputstyles.h3}>{titleText}</h3>)
+        if (key) 
+            preview.push(<p key='key' style={outputstyles.text}>Key: {key}</p>)
 
-        let chords = chordsText.split('\n').map((line, index) => {
-            if (line.trim() === '') {
-                return <br key={index} />;
-            }
-            else if (containsChordsSection(line)) {
-                // const label = line.trim().slice(1, -1).toUpperCase();
-                const label: string = containsChordsSection(line) ?? '';
-                return <p key={index} style={outputstyles.section}>{label.toUpperCase()}</p>;
-            }
-            else if (containsChords(line)) {
-                return <p key={index} style={outputstyles.chords}>{line}</p>;
-            }
-            return <p key={index} style={outputstyles.text}>{line}</p>;
-        });
-        
+        // Add a space before chords IFF title/other stuff
+        // precede the chords
         if (preview.length > 0)
             preview.push(<br key='top-br' />);
-        preview = preview.concat(chords);
+
+        if (chordsText) {
+            let chords = chordsText.split('\n').map((line, index) => {
+                if (line.trim() === '') {
+                    return <br key={index} />;
+                }
+                
+                const chordSectionLabel: string = containsChordsSection(line) ?? '';
+                if (chordSectionLabel) {
+                    return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
+                }
+                else if (containsChords(line)) {
+                    return <p key={index} style={outputstyles.chords}>{line}</p>;
+                }
+                return <p key={index} style={outputstyles.text}>{line}</p>;
+            });
+            preview = preview.concat(chords);
+        }
+        
 
         return preview;
     };
