@@ -1,6 +1,7 @@
 import { expect, test } from '@rstest/core';
 import { transposeChord } from './transposer.ts'
 
+/* transposeChord tests for individual chord transpositions */
 test('Major Chords up a whole step (+2)', () => {
     expect(transposeChord('C', 2)).toBe('D');
     expect(transposeChord('C#', 2)).toBe('D#');

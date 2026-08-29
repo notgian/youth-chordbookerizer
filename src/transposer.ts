@@ -29,6 +29,13 @@ const NOTES_FLATS = [
 ];
 
 // Utility functions
+
+/**
+ * Converts a sharp note to a flat
+ *
+ * @param {string} note - The note to convert from sharp to flat
+ * @return {string} The converted note. If the note is not an accidental or not a note, it returns the input
+ */
 function sharpToFlat(note: string): string {
     switch (note) {
         case 'C#':
@@ -46,6 +53,12 @@ function sharpToFlat(note: string): string {
     }
 }
 
+/**
+ * Converts a flat note to a sharp
+ *
+ * @param {string} note - The note to convert from flat to sharp
+ * @return {string} The converted note. If the note is not an accidental or not a note, it returns the input
+ */
 function flatToSharp(note: string): string {
     switch (note) {
         case 'Db':
@@ -64,6 +77,15 @@ function flatToSharp(note: string): string {
 }
 
 // Main transposition functions
+
+/** 
+ * Transposes an individual chord given a transposition factor (one unit of this factor is equivalent to a half step)
+ *
+ * @param {string} chord - the chord to transpose
+ * @param {number} transposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
+ * @param {boolean} [outputFlat=true] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
+ * @returns {string|undefined} The transposed chord string, or `undefined` if the input chord is invalid.
+ */
 function transposeChord(chord: string, transposeFactor: number, outputFlat: boolean = true): string | undefined {
     let note = chord.substring(0, 2)
     let isAccidental = true;
