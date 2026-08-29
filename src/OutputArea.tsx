@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useSyncExternalStore, useState} from 'react';
 import './App.css'
-import { transposeLine } from './transposer';
+import { sharpToFlat, transposeLine } from './transposer';
 
 const outputstyles: Record<string, CSSProperties> = {
     h1: {fontSize: '18pt', textAlign: 'center', margin: 0},
@@ -154,8 +154,17 @@ const OutputArea = () => {
 
         if (titleText)
             preview.push(<h3 key='title' style={outputstyles.h3}>{capo ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
-        if (key) 
-            preview.push(<p key='key' style={outputstyles.text}>Key: {key}</p>)
+        if (key) {
+            let keyLabel;
+            if (!showFlatsKeyLabel)
+                keyLabel = key;
+            else {
+                let keySplit = key.split(' ')
+                keyLabel = sharpToFlat(keySplit[0]) + ' ' + keySplit[1];
+            }
+            preview.push(<p key='key' style={outputstyles.text}>Key: {keyLabel}</p>)
+        
+        }
         if (keySig)
             preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
         if (capo && !showPianoChords)

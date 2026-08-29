@@ -137,6 +137,9 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
                 transposedOffset += 12;
 
             bassNote = NOTES_SHARPS[transposedOffset]
+            if (bassNote.length > 1 && bassNote[1] == '#' && outputFlat) {
+                bassNote = sharpToFlat(bassNote);
+            }
             chordSuffix = slashSplit[0] + '/' + bassNote
         }
         
