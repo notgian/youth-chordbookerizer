@@ -150,6 +150,7 @@ body {
     margin: 0 2pt;
     font-weight: bolder;
     border-radius: 5pt;
+    cursor: pointer;
 }
 
 /* Output Area */
@@ -160,14 +161,33 @@ body {
     display: flex;
 }
 
-#outputarea > .output-controls {
+.output-header {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     padding: 0em 1em;
     color: var(--text-primary);
 }
 
-#outputarea > .output-preview {
+.output-header-row {
+    display: flex;
+    flex-direction: row;
+    padding: 0em 1em;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-primary);
+}
+
+.output-header button {
+    background-color: white;
+    color: black;
+    font-family: var(--font-primary);
+    padding: 1em;
+    cursor: pointer;
+    font-weight: bolder;
+    border-radius: 1em;
+}
+
+.output-preview {
     background-color: white;
     overflow: scroll;
     line-height: 1.15;

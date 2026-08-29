@@ -184,8 +184,18 @@ const OutputArea = () => {
 
     return (
         <div id="outputarea" className="content-area">
-            <span className="output-controls">
-                <h2>Preview</h2>
+            <span className="output-header">
+                <span className="output-header-row">
+                    <h2>Preview</h2>
+                    <button>Copy Chords</button>
+                </span>
+
+                <span className="output-header-row">
+                    <span>
+                        <input type="checkbox" />
+                        <label>Preview Piano Chords</label>
+                    </span>
+                </span>
             </span>
             <span className="output-preview">
                 { renderPreview() }
