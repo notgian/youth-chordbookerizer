@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { useSyncExternalStore, useState} from 'react';
+import { useSyncExternalStore, useState, useRef} from 'react';
 import './App.css'
 import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
 
@@ -149,11 +149,36 @@ const OutputArea = () => {
     const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
     const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
 
+    // For copying
+    const previewRef = useRef<HTMLElement>(null);
+
+    const handleCopyPreview = async () => {
+        if (!previewRef.current) {
+            alert('Failed to copy chords! Please try again.');
+            return
+        }
+
+        try {
+            const htmlBlob = new Blob([previewRef.current.innerHTML], { type: 'text/html' });
+
+            await navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': htmlBlob,
+                }),
+            ]);
+
+            alert('Copied chords to clipboard. Paste directly into Google Docs!');
+        } catch (err) {
+            alert('Failed to copy chords! Please try again.');
+        }
+    }
+
+
     const renderPreview = () => {
         let preview: React.JSX.Element[] = [];
 
         if (titleText)
-            preview.push(<h3 key='title' style={outputstyles.h3}>{capo ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
+            preview.push(<h3 key='title' style={outputstyles.h3}>{capo && !showPianoChords ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
         if (key) {
             let keyLabel;
             if (!showFlatsKeyLabel)
@@ -216,7 +241,7 @@ const OutputArea = () => {
             <span className="output-header">
                 <span className="output-header-row">
                     <h2>Preview</h2>
-                    <button>Copy Chords</button>
+                    <button onClick={handleCopyPreview}>Copy Chords</button>
                 </span>
 
                 <span className="output-header-row">
@@ -254,7 +279,7 @@ const OutputArea = () => {
                     </span>
                 </span>
             </span>
-            <span className="output-preview">
+            <span className="output-preview" ref={previewRef}>
                 { renderPreview() }
             </span>
         </div>
