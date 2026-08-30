@@ -74,6 +74,8 @@ const InputArea = () => {
                         min="0"
                     />
                 </span>
+                
+                {/* NOTE: currently commenting this out as this feature may or may not be used
 
                 <span className="input-transpose-container">
                     <label>Transpose: </label>
@@ -88,6 +90,8 @@ const InputArea = () => {
                         >+</button> 
                     </span>
                 </span>
+
+                */}
             </span>
             <textarea 
                 onChange={updatePreview}
