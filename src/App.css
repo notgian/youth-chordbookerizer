@@ -20,7 +20,7 @@
 }
 
 .text-secondary {
-    color: var(--text-secondary)
+    color: var(--text-secondary);
 }
 
 /* main app */
@@ -126,6 +126,27 @@ header .header-gh-text:hover {
 header .header-gh-icon {
     color: white;
     font-size: 12pt;
+}
+
+/* Content Info */
+.content-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 1em;
+}
+
+.content-info > p {
+    margin-bottom: 0;
+}
+
+.info-card {
+    border: 3px solid var(--accent-main);
+    border-radius: 10px;
+    background-color: rgba(0, 122, 204, 0.3);
+    color: var(--accent-light);
+    padding: 1em;
+    margin: 1em 0;
 }
 
 /* Input area */
