@@ -132,7 +132,8 @@ header .header-gh-icon {
     grid-template-columns: 1fr 1fr;
     text-align: left;
     background-color: var(--bg-secondary);
-    gap: 2em;
+    column-gap: 2em;
+    row-gap: 1em;
     padding: 1em 2em;
 }
 

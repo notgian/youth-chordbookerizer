@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useSyncExternalStore } from 'react';
 import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
-import type { OutputProps } from './types';
+import type { OutputPreviewProps } from './types';
 
 /* constants for styles*/
 const chordColor = '#4a86e8'
@@ -140,7 +140,7 @@ const getRawTextSnapshot = () => {
 };
 
 // Component
-const OutputArea: React.FC<OutputProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
+const OutputArea: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
     const key = snapshot.key;

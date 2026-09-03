@@ -5,7 +5,15 @@ export interface InputProps {
     funcX: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
-export interface OutputProps {
+export interface OutputPreviewProps {
+    optPianoChords: boolean;
+    optFlatsKeyLabel: boolean;
+    optFlatsSongChords: boolean;
+
+    previewRef: RefObject<HTMLElement | null>;
+}
+
+export interface OutputControlProps {
     setOptPianoChords: (e: boolean) => void;
     setOptFlatsKeyLabel: (e: boolean) => void;
     setOptFlatsSongChords: (e: boolean) => void;

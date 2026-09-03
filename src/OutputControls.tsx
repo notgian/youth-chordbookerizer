@@ -1,6 +1,6 @@
-import type { OutputProps } from "./types";
+import type { OutputControlProps } from "./types";
 
-const OutputControls: React.FC<OutputProps> = ({ 
+const OutputControls: React.FC<OutputControlProps> = ({ 
         setOptFlatsKeyLabel, setOptFlatsSongChords, setOptPianoChords, optFlatsKeyLabel, optFlatsSongChords, optPianoChords, previewRef
     }) => 
     {

@@ -32,9 +32,6 @@ const Chordbookerizer = () => {
                 optPianoChords={showPianoChords}
                 optFlatsKeyLabel={showFlatsKeyLabel}
                 optFlatsSongChords={showFlatsSongChords}
-                setOptPianoChords={setShowPianoChords}
-                setOptFlatsKeyLabel={setShowFlatsKeyLabel}
-                setOptFlatsSongChords={setShowFlatsSongChords}
                 previewRef={previewRef}
             />
         </div>
