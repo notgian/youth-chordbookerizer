@@ -1,5 +1,5 @@
 import InputArea from './InputArea'
-import OutputArea from './OutputArea'
+import OutputPreview from './OutputPreview'
 import { InputControls } from './InputControls.tsx';
 import { OutputControls } from './OutputControls.tsx';
 import { useRef, useState } from 'react';
@@ -28,7 +28,7 @@ const Chordbookerizer = () => {
             />
 
             <InputArea />
-            <OutputArea 
+            <OutputPreview
                 optPianoChords={showPianoChords}
                 optFlatsKeyLabel={showFlatsKeyLabel}
                 optFlatsSongChords={showFlatsSongChords}

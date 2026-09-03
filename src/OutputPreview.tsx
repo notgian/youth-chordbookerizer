@@ -140,7 +140,7 @@ const getRawTextSnapshot = () => {
 };
 
 // Component
-const OutputArea: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
+const OutputPreview: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
     const key = snapshot.key;
@@ -220,4 +220,4 @@ const OutputArea: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKeyLa
     )
 }
 
-export default OutputArea;
+export default OutputPreview;
