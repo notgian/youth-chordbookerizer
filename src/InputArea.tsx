@@ -5,6 +5,16 @@ const InputArea = () => {
         window.dispatchEvent(new CustomEvent('update-preview'));
     } 
 
+    const capoClipValues = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.target.value) < 0) {
+            return e.target.value = "0"
+        }
+            
+        if (Number(e.target.value) > 11) {
+            return e.target.value = "0"
+        }
+    }
+
     return (
         <div id="inputarea" className="content-area">
             <label>Song Title: </label>
@@ -66,7 +76,10 @@ const InputArea = () => {
             <label>Capo: </label>
             <span className="input-capo-container">
                 <input
-                    onChange={updatePreview}
+                    onChange={ (e) => {
+                        updatePreview();
+                        capoClipValues(e);
+                    }}
                     id="input-capo"
                     type="number"
                     placeholder="0"
