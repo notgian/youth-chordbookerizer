@@ -1,8 +1,7 @@
-import { updatePreview } from './InputControls.tsx'
+import type { InputProps } from './types.ts';
 
-const InputArea = () => {
+const InputArea: React.FC<InputProps> = ({updatePreview}) => {
     return (
-            
         <textarea 
             onChange={updatePreview}
             placeholder="Place the song chords here" 

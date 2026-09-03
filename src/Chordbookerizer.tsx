@@ -11,12 +11,16 @@ const Chordbookerizer = () => {
     // For copying
     const previewRef = useRef<HTMLElement>(null);
 
+    const updatePreview = () => {
+        window.dispatchEvent(new CustomEvent('update-preview'));
+    } 
+
     return (
         <div className="chordbookerizer">
             <h3>Song Info/Chords</h3>
             <h3>Preview</h3>
 
-            <InputControls />
+            <InputControls updatePreview={updatePreview}/>
             <OutputControls 
                 optPianoChords={showPianoChords}
                 optFlatsKeyLabel={showFlatsKeyLabel}
@@ -27,7 +31,7 @@ const Chordbookerizer = () => {
                 previewRef={previewRef}
             />
 
-            <InputArea />
+            <InputArea updatePreview={updatePreview}/>
             <OutputPreview
                 optPianoChords={showPianoChords}
                 optFlatsKeyLabel={showFlatsKeyLabel}

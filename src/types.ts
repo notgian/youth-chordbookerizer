@@ -1,8 +1,7 @@
 import type { RefObject } from "react";
 
 export interface InputProps {
-    updatePreview: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-    funcX: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    updatePreview: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
 
 export interface OutputPreviewProps {

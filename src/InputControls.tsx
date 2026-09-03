@@ -1,8 +1,6 @@
-const updatePreview = () => {
-    window.dispatchEvent(new CustomEvent('update-preview'));
-} 
+import type { InputProps } from "./types"
 
-const InputControls = () => {
+const InputControls: React.FC<InputProps> = ({updatePreview}) => {
     const capoClipValues = (e:React.ChangeEvent<HTMLInputElement>) => {
         if (Number(e.target.value) < 0) {
             return e.target.value = "0"
@@ -76,7 +74,7 @@ const InputControls = () => {
             <span className="input-capo-container">
                 <input
                     onChange={ (e) => {
-                        updatePreview();
+                        updatePreview(e);
                         capoClipValues(e);
                     }}
                     id="input-capo"
@@ -92,6 +90,5 @@ const InputControls = () => {
 }
 
 export {
-    InputControls,
-    updatePreview
+    InputControls
 };
