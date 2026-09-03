@@ -137,8 +137,12 @@ header .header-gh-icon {
 /*Input Output Area */
 
 .input-output-area {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 3 rows: Header area, Form controls area, and Content/Textarea area */
+    grid-template-rows: auto auto 1fr;
+    /* display: flex; */
+    /* flex-direction: row; */
     align-items: stretch;
     background-color: var(--bg-secondary);
     gap: 10px;
@@ -157,30 +161,38 @@ header .header-gh-icon {
     font-size: 16pt;
 }
 
+/* #input-chords, #output-preview { */
+/*     grid-row: 2; */
+/* } */
 
 /* Input area */
 
-#inputarea {
+
+.input-controls {
     display: grid;
     grid-template-columns: 25% 75%;
     align-items: center;
+    gap: 5px;
 }
 
-#inputarea input, textarea, select, option {
+input, 
+textarea, 
+select, 
+option {
     resize: none;
     outline: none;
     padding: 10px;
     font-family: var(--font-primary);
 }
 
-#inputarea textarea {
+#input-chords {
     min-height: 40vh;
     grid-column: 1 / -1;
     field-sizing: content;
     font-family: 'Courier New';
 }
 
-#inputarea label {
+.input-controls label {
     font-weight: bolder;
 }
 
@@ -241,14 +253,14 @@ header .header-gh-icon {
     font-family: Arial;
     text-align: left;
     color: black;
-    display: flex;
 }
 
 .output-controls {
-
+    display: flex;
+    flex-direction: column;
 }
 
-.output-controls > label {
+.output-controls-checkboxes > label {
     color: var(--text-primary);
     display: block;
 }
@@ -364,6 +376,14 @@ header .header-gh-icon {
         text-align: left;
     }
 }
+
+/* Chordbookerizer */
+.chordbookerizer {
+    display: grid;
+    grid-template-columns: auto auto;
+    /* 3 rows: Header area, Form controls area, and Content/Textarea area */
+}
+
 
 /* #outputarea h1 { */
 /*     font-size: 18; */

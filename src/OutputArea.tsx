@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
-import { useSyncExternalStore, useState, useRef} from 'react';
-import './App.css'
+import { useSyncExternalStore } from 'react';
 import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
+import type { OutputProps } from './types';
 
 const outputstyles: Record<string, CSSProperties> = {
     h1: {fontSize: '18pt', textAlign: 'center', margin: 0},
@@ -136,7 +136,7 @@ const getRawTextSnapshot = () => {
 };
 
 // Component
-const OutputArea = () => {
+const OutputArea: React.FC<OutputProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
     const key = snapshot.key;
@@ -145,43 +145,15 @@ const OutputArea = () => {
     const chordsText = snapshot.chords;
     
     // Output options
-    const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
-    const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
-    const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
-
-    // For copying
-    const previewRef = useRef<HTMLElement>(null);
-
-    const handleCopyPreview = async () => {
-        if (!previewRef.current) {
-            alert('Failed to copy chords! Please try again.');
-            return
-        }
-
-        try {
-            const htmlBlob = new Blob([previewRef.current.innerHTML], { type: 'text/html' });
-
-            await navigator.clipboard.write([
-                new ClipboardItem({
-                    'text/html': htmlBlob,
-                }),
-            ]);
-
-            alert('Copied chords to clipboard. Paste directly into Google Docs!');
-        } catch (err) {
-            alert('Failed to copy chords! Please try again.');
-        }
-    }
-
 
     const renderPreview = () => {
         let preview: React.JSX.Element[] = [];
 
         if (titleText)
-            preview.push(<h3 key='title' style={outputstyles.h3}>{capo && !showPianoChords ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
+            preview.push(<h3 key='title' style={outputstyles.h3}>{capo && !optPianoChords ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
         if (key) {
             let keyLabel;
-            if (!showFlatsKeyLabel)
+            if (!optFlatsKeyLabel)
                 keyLabel = key;
             else {
                 let keySplit = key.split(' ')
@@ -192,7 +164,7 @@ const OutputArea = () => {
         }
         if (keySig)
             preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
-        if (capo && !showPianoChords)
+        if (capo && !optPianoChords)
             preview.push(<p key='capo' style={outputstyles.text}>Capo {capo}</p>)
 
         // Add a space before chords IFF title/other stuff
@@ -211,11 +183,11 @@ const OutputArea = () => {
                     return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
                 }
                 else if (containsChords(line)) {
-                    if (showPianoChords && Number(capo) > 0) {
-                        let t = transposeLine(line, Number(capo), showFlatsSongChords)
+                    if (optPianoChords && Number(capo) > 0) {
+                        let t = transposeLine(line, Number(capo), optFlatsSongChords)
                         return <p key={index} style={outputstyles.chords}>{t}</p>;
                     }
-                    else if (showFlatsSongChords) {
+                    else if (optFlatsSongChords) {
                         let flatsLine = line;
                         let tokens = flatsLine.split(/[\s]+/g);
                         for (let token of tokens) {
@@ -237,49 +209,9 @@ const OutputArea = () => {
     };
 
     return (
-        <div id="outputarea" className="content-area">
-            <span className="output-controls">
-                <label className="checkbox-container">
-                    Preview Piano Chords
-                    <input
-                        type="checkbox" 
-                        checked={showPianoChords}
-                        onChange={(e) => setShowPianoChords(e.target.checked)}
-                    />
-                    <span className="checkmark"></span>
-                </label>
-
-                <label className="checkbox-container">
-                    Flats in Song Key Label
-                    <input
-                        type="checkbox" 
-                        checked={showFlatsKeyLabel}
-                        onChange={(e) => setShowFlatsKeyLabel(e.target.checked)}
-                    />
-                    <span className="checkmark"></span>
-                </label>
-
-                <label className="checkbox-container">
-                    Flats in Chords
-                    <input
-                        type="checkbox" 
-                        checked={showFlatsSongChords}
-                        onChange={(e) => setShowFlatsSongChords(e.target.checked)}
-                    />
-                    <span className="checkmark"></span>
-                </label>
-
-            </span>
-
-            <button 
-                className="copy-preview-button" 
-                onClick={handleCopyPreview}
-            >Copy Chords</button>
-
-            <span className="output-preview" ref={previewRef}>
-                { renderPreview() }
-            </span>
-        </div>
+        <span id="output-preview" className="output-preview" ref={previewRef}>
+            { renderPreview() }
+        </span>
 
     )
 }
