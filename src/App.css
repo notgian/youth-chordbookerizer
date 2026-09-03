@@ -60,22 +60,6 @@ body {
     gap: 10px;
 }
 
-
-.input-output-area {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    background-color: var(--bg-secondary);
-    gap: 10px;
-    padding: 2em;
-    max-height: 100vh;
-}
-
-.input-output-area > * {
-    flex-grow: 1;
-    flex-basis:0;
-}
-
 /* Header */
 
 header {
@@ -149,32 +133,52 @@ header .header-gh-icon {
     margin: 1em 0;
 }
 
-/* Input area */
+/*Input Output Area */
 
-#inputarea input, textarea {
-    resize: none;
-    outline: none;
-    padding: 10px;
-    font-family: 'Courier New'
-}
-
-#inputarea textarea {
-    min-height: 40vh;
-    field-sizing: content;
-}
-
-.input-double-group {
+.input-output-area {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    align-items: stretch;
+    background-color: var(--bg-secondary);
+    gap: 10px;
+    padding: 2em;
+    max-height: 100vh;
+    text-align: left;
 }
 
-.input-double-group > * {
+.input-output-area > span {
     flex-grow: 1;
     flex-basis: 0;
 }
 
-.input-double-group label {
+.input-output-area > span >  h3 {
+    font-size: 16pt;
+}
+
+
+/* Input area */
+
+#inputarea {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    align-items: center;
+}
+
+#inputarea input, textarea, select, option {
+    resize: none;
+    outline: none;
+    padding: 10px;
+    font-family: var(--font-primary);
+}
+
+#inputarea textarea {
+    min-height: 40vh;
+    grid-column: 1 / -1;
+    field-sizing: content;
+    font-family: 'Courier New';
+}
+
+#inputarea label {
     font-weight: bolder;
 }
 
@@ -183,11 +187,7 @@ header .header-gh-icon {
     align-items: center;
     justify-content: center;
     text-align: center;
-}
-
-.input-key > * {
-    margin-right: 10px;  
-    margin-bottom: 1em;
+    gap: 10px;
 }
 
 .input-key select {
@@ -290,10 +290,6 @@ header .header-gh-icon {
     .input-output-area > * {
         flex-grow: 0;
         flex-basis:0
-    }
-
-    .input-key-and-signature {
-        flex-direction: column;
     }
 
     .input-time-signature {

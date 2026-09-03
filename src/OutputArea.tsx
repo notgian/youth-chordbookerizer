@@ -240,7 +240,6 @@ const OutputArea = () => {
         <div id="outputarea" className="content-area">
             <span className="output-header">
                 <span className="output-header-row">
-                    <h2>Preview</h2>
                     <button onClick={handleCopyPreview}>Copy Chords</button>
                 </span>
 

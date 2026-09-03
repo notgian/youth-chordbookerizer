@@ -19,8 +19,14 @@ const App = () => {
                     <p className="text-secondary">Simply copy a song's chords and paste them into this page. Then copy the formatted chords and paste them straight into a Google Docs!</p>
                 </div>
                 <div className="input-output-area">
-                    <InputArea />
-                    <OutputArea />
+                    <span>
+                        <h3>Song Info/Chords</h3>
+                        <InputArea />
+                    </span>
+                    <span>
+                        <h3>Preview</h3>
+                        <OutputArea />
+                    </span>
                 </div>
             </div>
         </div>
