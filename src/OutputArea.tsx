@@ -238,46 +238,41 @@ const OutputArea = () => {
 
     return (
         <div id="outputarea" className="content-area">
-            <span className="output-header">
-                <span className="output-header-row">
-                    <button onClick={handleCopyPreview}>Copy Chords</button>
-                </span>
+            <span className="output-controls">
+                <label className="checkbox-container">
+                    Preview Piano Chords
+                    <input
+                        type="checkbox" 
+                        checked={showPianoChords}
+                        onChange={(e) => setShowPianoChords(e.target.checked)}
+                    />
+                    <span className="checkmark"></span>
+                </label>
 
-                <span className="output-header-row">
-                    <span>
-                        <input
-                            id="input-preview-piano"
-                            type="checkbox" 
-                            checked={showPianoChords}
-                            onChange={(e) => setShowPianoChords(e.target.checked)}
-                        />
-                        <label>Preview Piano Chords</label>
-                    </span>
-                </span>
+                <label className="checkbox-container">
+                    Flats in Song Key Label
+                    <input
+                        type="checkbox" 
+                        checked={showFlatsKeyLabel}
+                        onChange={(e) => setShowFlatsKeyLabel(e.target.checked)}
+                    />
+                    <span className="checkmark"></span>
+                </label>
 
 
-                <span className="output-header-row">
-                    <span>
-                        <input
-                            id="input-preview-piano"
-                            type="checkbox" 
-                            checked={showFlatsKeyLabel}
-                            onChange={(e) => setShowFlatsKeyLabel(e.target.checked)}
-                        />
-                        <label>Flats in Song Key Label</label>
-                    </span>
+                <label className="checkbox-container">
+                    Flats in Chords
+                    <input
+                        type="checkbox" 
+                        checked={showFlatsSongChords}
+                        onChange={(e) => setShowFlatsSongChords(e.target.checked)}
+                    />
+                    <span className="checkmark"></span>
+                </label>
 
-                    <span>
-                        <input
-                            id="input-preview-piano"
-                            type="checkbox" 
-                            checked={showFlatsSongChords}
-                            onChange={(e) => setShowFlatsSongChords(e.target.checked)}
-                        />
-                        <label>Flats in Chords</label>
-                    </span>
-                </span>
             </span>
+
+            <button onClick={handleCopyPreview}>Copy Chords</button>
             <span className="output-preview" ref={previewRef}>
                 { renderPreview() }
             </span>
