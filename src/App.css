@@ -54,15 +54,7 @@ body {
     font-weight: 700;
 }
 
-.content-area {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1em;
-    gap: 10px;
-}
-
 /* Header */
-
 header {
     top: 0;
     left: 0;
@@ -134,38 +126,15 @@ header .header-gh-icon {
     margin: 1em 0;
 }
 
-/*Input Output Area */
-
-.input-output-area {
+/* Chordbookerizer */
+.chordbookerizer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    /* 3 rows: Header area, Form controls area, and Content/Textarea area */
-    grid-template-rows: auto auto 1fr;
-    /* display: flex; */
-    /* flex-direction: row; */
-    align-items: stretch;
-    background-color: var(--bg-secondary);
-    gap: 10px;
-    padding: 2em;
-    max-height: 100vh;
     text-align: left;
+    background-color: var(--bg-secondary);
+    gap: 2em;
+    padding: 1em 2em;
 }
-
-.input-output-area > span {
-    flex-grow: 1;
-    flex-basis: 0;
-    padding: 0em 15px;
-}
-
-.input-output-area > span >  h3 {
-    font-size: 16pt;
-}
-
-/* #input-chords, #output-preview { */
-/*     grid-row: 2; */
-/* } */
-
-/* Input area */
 
 
 .input-controls {
@@ -187,9 +156,8 @@ option {
 
 #input-chords {
     min-height: 40vh;
-    grid-column: 1 / -1;
     field-sizing: content;
-    font-family: 'Courier New';
+    font-family: var(--font-mono);
 }
 
 .input-controls label {
@@ -249,15 +217,10 @@ option {
 }
 
 /* Output Area */
-#outputarea {
-    font-family: Arial;
-    text-align: left;
-    color: black;
-}
-
 .output-controls {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 .output-controls-checkboxes > label {
@@ -358,31 +321,11 @@ option {
 
 /* On smaller screens (e.g., mobile devices), switch to vertical stacking */
 @media (max-width: 768px) {
-    .input-output-area {
-        display: flex;
-        flex-direction: column;
-        background-color: var(--bg-secondary);
-        gap: 10px;
-        padding: 2em;
-        max-height: 140vh;
-    }
-
-    .input-output-area > * {
-        flex-grow: 0;
-        flex-basis:0
-    }
-
     .input-time-signature {
         text-align: left;
     }
 }
 
-/* Chordbookerizer */
-.chordbookerizer {
-    display: grid;
-    grid-template-columns: auto auto;
-    /* 3 rows: Header area, Form controls area, and Content/Textarea area */
-}
 
 
 /* #outputarea h1 { */

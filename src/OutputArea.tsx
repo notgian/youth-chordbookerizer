@@ -3,13 +3,17 @@ import { useSyncExternalStore } from 'react';
 import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
 import type { OutputProps } from './types';
 
+/* constants for styles*/
+const chordColor = '#4a86e8'
+const chordsFont = 'Arial'
+
 const outputstyles: Record<string, CSSProperties> = {
-    h1: {fontSize: '18pt', textAlign: 'center', margin: 0},
-    h2: {fontSize: '12pt', textAlign: 'center', textDecoration: 'underline', margin: 0},
-    h3: {fontSize: '12pt', margin: 0},
-    chords : {fontSize: '11pt', whiteSpace: 'pre-wrap', margin: 0, color: '#4a86e8'},
-    text: {fontSize: '11pt', margin: 0},
-    section: {fontSize: '11pt', textDecoration: 'underline', margin: 0}
+    h1: {fontSize: '18pt', textAlign: 'center', margin: 0, color: '#000', fontFamily: chordsFont},
+    h2: {fontSize: '12pt', textAlign: 'center', textDecoration: 'underline', margin: 0, color: '#000', fontFamily: chordsFont},
+    h3: {fontSize: '12pt', margin: 0, color: '#000', fontFamily: chordsFont},
+    chords : {fontSize: '11pt', whiteSpace: 'pre-wrap', margin: 0, color: chordColor, fontFamily: chordsFont},
+    text: {fontSize: '11pt', margin: 0, color: '#000', fontFamily: chordsFont},
+    section: {fontSize: '11pt', textDecoration: 'underline', margin: 0, color: '#000', fontFamily: chordsFont}
 }
 
 // Handles most chords. Idk if there are testcases for rlly weird chords
