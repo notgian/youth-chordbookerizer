@@ -1,0 +1,45 @@
+import InputArea from './InputArea'
+import OutputPreview from './OutputPreview'
+import { InputControls } from './InputControls.tsx';
+import { OutputControls } from './OutputControls.tsx';
+import { useRef, useState } from 'react';
+
+const Chordbookerizer = () => {
+    const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
+    const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
+    const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
+    // For copying
+    const previewRef = useRef<HTMLElement>(null);
+
+    const updatePreview = () => {
+        window.dispatchEvent(new CustomEvent('update-preview'));
+    } 
+
+    return (
+        <div className="chordbookerizer">
+            <h3>Song Info/Chords</h3>
+            <h3>Preview</h3>
+
+            <InputControls updatePreview={updatePreview}/>
+            <OutputControls 
+                optPianoChords={showPianoChords}
+                optFlatsKeyLabel={showFlatsKeyLabel}
+                optFlatsSongChords={showFlatsSongChords}
+                setOptPianoChords={setShowPianoChords}
+                setOptFlatsKeyLabel={setShowFlatsKeyLabel}
+                setOptFlatsSongChords={setShowFlatsSongChords}
+                previewRef={previewRef}
+            />
+
+            <InputArea updatePreview={updatePreview}/>
+            <OutputPreview
+                optPianoChords={showPianoChords}
+                optFlatsKeyLabel={showFlatsKeyLabel}
+                optFlatsSongChords={showFlatsSongChords}
+                previewRef={previewRef}
+            />
+        </div>
+    )
+}
+
+export default Chordbookerizer

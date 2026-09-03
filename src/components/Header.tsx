@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGithub } from "@fortawesome/free-brands-svg-icons"
 
-import YouthLogo from './assets/youthsjrm.svg'
+import YouthLogo from '../assets/youthsjrm.svg'
 
 const Header = () => {
     return (
