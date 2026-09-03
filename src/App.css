@@ -7,6 +7,7 @@
 
     --accent-main: #007ACC;
     --accent-light: #569CD6;
+    --accent-light-darker: #4291D1;
 
     /* --font-primary: Inter, Avenir, Helvetica, Arial, sans-serif; */
     --font-primary: Roboto;
@@ -292,19 +293,16 @@ header .header-gh-icon {
     background-color: var(--accent-light);
 }
 
-/* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
     content: "";
     position: absolute;
     display: none;
 }
 
-/* Show the checkmark when checked */
 .checkbox-container input:checked ~ .checkmark:after {
     display: block;
 }
 
-/* Style the checkmark/indicator */
 .checkbox-container .checkmark:after {
     left: 4pt;
     width: 4pt;
@@ -314,6 +312,28 @@ header .header-gh-icon {
     -webkit-transform: rotate(45deg);
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
+}
+
+.copy-preview-button {
+    font-family: var(--font-primary);
+    font-weight: bold;
+    font-size: 12pt;
+    padding: 6pt;
+    cursor: pointer;
+    color:var(--text-primary);
+    background-color: var(--accent-light);
+    border: var(--accent-main) 3px solid;
+    border-radius: 10px;
+}
+
+.copy-preview-button:hover {
+    background-color: var(--accent-light-darker);
+}
+
+.copy-preview-button:active {
+    border: var(--accent-main) 3px inset;
+    color: #eee;
+    background-color: var(--accent-light-darker);
 }
 
 .output-preview {

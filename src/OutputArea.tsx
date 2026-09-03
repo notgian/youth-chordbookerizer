@@ -259,7 +259,6 @@ const OutputArea = () => {
                     <span className="checkmark"></span>
                 </label>
 
-
                 <label className="checkbox-container">
                     Flats in Chords
                     <input
@@ -272,7 +271,11 @@ const OutputArea = () => {
 
             </span>
 
-            <button onClick={handleCopyPreview}>Copy Chords</button>
+            <button 
+                className="copy-preview-button" 
+                onClick={handleCopyPreview}
+            >Copy Chords</button>
+
             <span className="output-preview" ref={previewRef}>
                 { renderPreview() }
             </span>
