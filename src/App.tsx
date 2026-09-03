@@ -1,8 +1,11 @@
-import './App.css';
-import Header from './Header.tsx'
+import './styles/App.css';
+import './styles/Header.css';
+import './styles/Input.css';
+import './styles/Output.css';
+import Header from './components/Header.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import Chordbookerizer from './Chordbookerizer.tsx';
+import Chordbookerizer from './components/Chordbookerizer.tsx';
 
 const App = () => {
     return (

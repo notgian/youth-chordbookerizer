@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react'
 import { useSyncExternalStore } from 'react';
-import { sharpToFlat, sharpToFlatChord, transposeLine } from './transposer';
-import type { OutputPreviewProps } from './types';
+import { sharpToFlat, sharpToFlatChord, transposeLine } from '../transposer';
+import type { OutputPreviewProps } from '../types';
 
 /* constants for styles*/
 const chordColor = '#4a86e8'

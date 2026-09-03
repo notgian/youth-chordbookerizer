@@ -1,0 +1,51 @@
+/* Header */
+header {
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--bg-tertiary);
+    padding: 1em;
+}
+
+header .header-content {
+    max-height: 20pt;
+    display: flex;
+    align-items: center;
+}
+
+header .header-content > * {
+    margin: 0 5px;
+}
+
+header .header-title {
+    font-weight: bolder;
+    display: inline-block;
+    text-align: left;
+    font-size: 16pt;
+}
+
+header .header-icon {
+    height: 24pt
+}
+
+header .header-gh {
+    text-align: right;
+}
+
+header .header-gh-text {
+    text-decoration: underline;
+    color: white;
+    font-size: 11pt;
+}
+
+header .header-gh-text:hover {
+    text-decoration: underline;
+    color: var(--text-secondary);
+}
+
+header .header-gh-icon {
+    color: white;
+    font-size: 12pt;
+}
+

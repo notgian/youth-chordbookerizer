@@ -1,4 +1,4 @@
-import type { InputProps } from './types.ts';
+import type { InputProps } from '../types.ts';
 
 const InputArea: React.FC<InputProps> = ({updatePreview}) => {
     return (

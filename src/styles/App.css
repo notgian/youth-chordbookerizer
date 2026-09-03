@@ -1,0 +1,118 @@
+:root {
+    --bg-primary: #1E1E1E;
+    --bg-secondary: #252526;
+    --bg-tertiary: #333333;
+    --text-primary: #FFFFFF;
+    --text-secondary: #B3B3B3;
+
+    --accent-main: #007ACC;
+    --accent-light: #569CD6;
+    --accent-light-darker: #4291D1;
+
+    /* --font-primary: Inter, Avenir, Helvetica, Arial, sans-serif; */
+    --font-primary: Roboto;
+    --font-mono: "Courier New";
+}
+
+/* General Styles */
+
+.text-primary {
+    color: var(--text-primary)
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+/* main app */
+
+body {
+    margin: 0;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    background-color: var(--bg-primary);
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+.content {
+    display: flex;
+    line-height: 1.1;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2em;
+}
+
+.content h1 {
+    font-size: 3.6rem;
+    font-weight: 700;
+}
+
+/* Content Info */
+.content-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 1em;
+}
+
+.content-info > p {
+    margin-bottom: 0;
+}
+
+.info-card {
+    border: 3px solid var(--accent-main);
+    border-radius: 10px;
+    background-color: rgba(0, 122, 204, 0.3);
+    color: var(--accent-light);
+    padding: 1em;
+    margin: 1em 0;
+}
+
+/* Chordbookerizer */
+.chordbookerizer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: left;
+    background-color: var(--bg-secondary);
+    column-gap: 2em;
+    row-gap: 1em;
+    padding: 1em 2em;
+}
+
+
+
+/* On smaller screens (e.g., mobile devices), switch to vertical stacking */
+@media (max-width: 768px) {
+    .input-time-signature {
+        text-align: left;
+    }
+}
+
+
+
+/* #outputarea h1 { */
+/*     font-size: 18; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea h2 { */
+/*     font-size: 12; */
+/*     text-decoration: underline; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea h3 { */
+/*     font-size: 13; */
+/*     font-weight: bold; */
+/* } */
+/**/
+/* #outputarea p { */
+/*     font-size: 11; */
+/* } */

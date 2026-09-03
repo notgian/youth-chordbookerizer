@@ -1,0 +1,79 @@
+.input-controls {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    align-items: center;
+    gap: 5px;
+}
+
+input, 
+textarea, 
+select, 
+option {
+    resize: none;
+    outline: none;
+    padding: 10px;
+    font-family: var(--font-primary);
+}
+
+#input-chords {
+    min-height: 40vh;
+    field-sizing: content;
+    font-family: var(--font-mono);
+}
+
+.input-controls label {
+    font-weight: bolder;
+}
+
+.input-key{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 10px;
+}
+
+.input-key select {
+    font-family: var(--font-primary);
+    padding: 0.8em 1em;
+    background-color: white;
+    outline: none;
+    border: none;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.input-time-signature input[type=number] {
+    width: 11pt;
+    text-align: center;
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.input-time-signature input::-webkit-outer-spin-button,
+.input-time-signature input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.input-block {
+    display: inline-block;
+}
+
+.input-signature-sep {
+    margin: 0 5pt;
+}
+
+.input-transpose-container button {
+    background-color: white;
+    color: black;
+    font-family: 'Courier New';
+    outline: none;
+    font-size: 11pt;
+    padding: 4pt 8pt;
+    margin: 0 2pt;
+    font-weight: bolder;
+    border-radius: 5pt;
+    cursor: pointer;
+}
+

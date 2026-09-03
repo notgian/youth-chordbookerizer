@@ -1,0 +1,102 @@
+/* Output Area */
+.output-controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.output-controls-checkboxes > label {
+    color: var(--text-primary);
+    display: block;
+}
+
+/* Checkbox code adapted from w3 */
+/* https://www.w3schools.com/howto/howto_css_custom_checkbox.asp */
+.checkbox-container {
+    display: block;
+    position: relative;
+    padding-left: 20pt;
+    cursor: pointer;
+    font-size: 12pt;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    margin-bottom: 12px;
+}
+
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 14pt;
+    width: 14pt;
+    background-color: #eee;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: var(--accent-light);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 4pt;
+    width: 4pt;
+    height: 8pt;
+    border: solid white;
+    border-width: 0 3pt 3pt 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.copy-preview-button {
+    font-family: var(--font-primary);
+    font-weight: bold;
+    font-size: 12pt;
+    padding: 6pt;
+    cursor: pointer;
+    color:var(--text-primary);
+    background-color: var(--accent-light);
+    border: var(--accent-main) 3px solid;
+    border-radius: 10px;
+}
+
+.copy-preview-button:hover {
+    background-color: var(--accent-light-darker);
+}
+
+.copy-preview-button:active {
+    border: var(--accent-main) 3px inset;
+    color: #eee;
+    background-color: var(--accent-light-darker);
+}
+
+.output-preview {
+    background-color: white;
+    overflow: scroll;
+    line-height: 1.15;
+    padding: 2em;
+    flex-grow: 1;
+}

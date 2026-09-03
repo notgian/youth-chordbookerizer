@@ -1,4 +1,4 @@
-import type { InputProps } from "./types"
+import type { InputProps } from "../types"
 
 const InputControls: React.FC<InputProps> = ({updatePreview}) => {
     const capoClipValues = (e:React.ChangeEvent<HTMLInputElement>) => {
