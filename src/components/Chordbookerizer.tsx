@@ -17,8 +17,16 @@ const Chordbookerizer = () => {
 
     return (
         <div className="chordbookerizer">
-            <h3>Song Info/Chords</h3>
-            <h3>Preview</h3>
+            <span>
+                <h3>Song Info/Chords</h3>
+                <hr />
+            </span>
+
+            <span>
+                <h3>Preview</h3>
+                <hr />
+            </span>
+
 
             <InputControls updatePreview={updatePreview}/>
             <OutputControls 

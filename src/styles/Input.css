@@ -43,11 +43,17 @@ option {
     flex-basis: 0;
 }
 
+.input-time-signature {
+    display: inline;
+}
+
 .input-time-signature input[type=number] {
     width: 11pt;
     text-align: center;
     appearance: textfield;
     -moz-appearance: textfield;
+    outline: none;
+    border: none;
 }
 
 .input-time-signature input::-webkit-outer-spin-button,
@@ -56,11 +62,19 @@ option {
     margin: 0;
 }
 
+.input-time-signature > span:first-child {
+    background-color: white;
+    height: 100%;
+    display: inline-block;
+    align-items: initial;
+}
+
 .input-block {
     display: inline-block;
 }
 
 .input-signature-sep {
+    color: black;
     margin: 0 5pt;
 }
 

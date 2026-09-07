@@ -53,21 +53,23 @@ const InputControls: React.FC<InputProps> = ({updatePreview}) => {
 
             <label>Time Signature: </label>
             <span className="input-time-signature">
-                <input 
-                    onChange={updatePreview}
-                    className="input-signature"
-                    id="input-signature-top"
-                    type="number"
-                    placeholder="4"
-                />
-                <span className="input-signature-sep">/</span>
-                <input 
-                    onChange={updatePreview}
-                    className="input-signature"
-                    id="input-signature-bot"
-                    type="number"
-                    placeholder="4"
-                />
+                <span>
+                    <input 
+                        onChange={updatePreview}
+                        className="input-signature"
+                        id="input-signature-top"
+                        type="number"
+                        placeholder="4"
+                    />
+                    <span className="input-signature-sep">/</span>
+                    <input 
+                        onChange={updatePreview}
+                        className="input-signature"
+                        id="input-signature-bot"
+                        type="number"
+                        placeholder="4"
+                    />
+                </span>
             </span>
 
             <label>Capo: </label>
