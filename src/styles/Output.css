@@ -100,3 +100,34 @@
     padding: 2em;
     flex-grow: 1;
 }
+
+/* Transposition control elements */
+
+.transpose-controls-container {
+    display: flex;
+    align-items: center;
+}
+
+.transpose-controls-container > span {
+    
+}
+
+.transpose-controls-value {
+    min-width: 20pt;
+    display: inline-block;
+    margin: 0 5pt;
+    text-align: center;
+}
+
+.transpose-controls-value sup {
+    vertical-align: top;
+    font-size: 0.6em;
+}
+
+.transpose-controls-buttons button {
+    color: black;
+    font-weight: bolder;
+    padding: 0 3pt;
+    font-size: 12pt;
+    font-family: 'Courier New', Courier, monospace
+}

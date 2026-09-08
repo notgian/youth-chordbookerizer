@@ -22,6 +22,7 @@ export interface OutputPreviewProps {
     optPianoChords: boolean;
     optFlatsKeyLabel: boolean;
     optFlatsSongChords: boolean;
+    optOverallTransposeFactor: number;
 
     previewRef: RefObject<HTMLElement | null>;
 }
@@ -30,6 +31,7 @@ export interface OutputControlProps {
     optPianoChordsController: ReactStateController<boolean>;
     optFlatsKeyLabelController: ReactStateController<boolean>;
     optFlatsSongChordsController: ReactStateController<boolean>;
+    optOverallTransposeFactorController: ReactStateController<number>;
 
     previewRef: RefObject<HTMLElement | null>;
 }

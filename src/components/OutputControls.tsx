@@ -1,7 +1,8 @@
 import type { OutputControlProps } from "../types";
 
 const OutputControls: React.FC<OutputControlProps> = ({ 
-        optFlatsKeyLabelController, optFlatsSongChordsController, optPianoChordsController, previewRef
+        optFlatsKeyLabelController, optFlatsSongChordsController, optPianoChordsController, optOverallTransposeFactorController, 
+        previewRef
     }) => 
     {
 
@@ -24,6 +25,20 @@ const OutputControls: React.FC<OutputControlProps> = ({
         } catch (err) {
             alert('Failed to copy chords! Please try again.');
         }
+    }
+
+    const handleTranspose = (factor: number) => {
+        if (factor === 0) {
+            return
+        }
+
+        const currentValue = optOverallTransposeFactorController.value;
+        let newValue = currentValue + factor;
+        if (newValue < -11 || newValue > 11)
+            newValue = 0;
+
+        optOverallTransposeFactorController.set(newValue);
+
     }
 
 
@@ -60,6 +75,41 @@ const OutputControls: React.FC<OutputControlProps> = ({
                     />
                     <span className="checkmark"></span>
                 </label>
+            </span>
+
+            <span className="transpose-controls-container">
+                <span>
+                    <span>
+                        <b>
+                            Transpose
+                        </b>
+                    </span>
+                    <span className="transpose-controls-value">
+                        <sup>
+                            {(() => {
+                                const transposeFactor = optOverallTransposeFactorController.value;
+                                if (transposeFactor === 0) return ''
+                                else if (transposeFactor > 0) return '+'
+                                else return '-'
+                            })()}
+                        </sup>
+                        {(() => {
+                            const transposeFactor = optOverallTransposeFactorController.value;
+                            if (transposeFactor === 0) return ''
+                            else return Math.abs(transposeFactor)
+                        })()}
+                    </span>
+                </span>
+
+                <span className="transpose-controls-buttons">
+                    <button
+                        onClick={() => handleTranspose(-1)}
+                    >-</button>
+                    <button
+                        onClick={() => handleTranspose(1)}
+                    >+</button>
+                </span>
+
             </span>
 
             <button 

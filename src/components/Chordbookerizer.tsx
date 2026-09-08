@@ -9,6 +9,7 @@ const Chordbookerizer = () => {
     const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
     const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
     const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
+    const [overallTransposeFactor, setOverallTransposeFactor] = useState<number>(0);
     // For copying
     const previewRef = useRef<HTMLElement>(null);
 
@@ -34,6 +35,7 @@ const Chordbookerizer = () => {
                 optPianoChordsController={new ReactStateController(showPianoChords, setShowPianoChords)}
                 optFlatsKeyLabelController={new ReactStateController(showFlatsKeyLabel, setShowFlatsKeyLabel)}
                 optFlatsSongChordsController={new ReactStateController(showFlatsSongChords, setShowFlatsSongChords)}
+                optOverallTransposeFactorController={new ReactStateController(overallTransposeFactor, setOverallTransposeFactor)}
                 previewRef={previewRef}
             />
 
@@ -42,6 +44,7 @@ const Chordbookerizer = () => {
                 optPianoChords={showPianoChords}
                 optFlatsKeyLabel={showFlatsKeyLabel}
                 optFlatsSongChords={showFlatsSongChords}
+                optOverallTransposeFactor={overallTransposeFactor}
                 previewRef={previewRef}
             />
         </div>
