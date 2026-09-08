@@ -3,6 +3,7 @@ import OutputPreview from './OutputPreview'
 import { InputControls } from './InputControls.tsx';
 import { OutputControls } from './OutputControls.tsx';
 import { useRef, useState } from 'react';
+import { ReactStateController } from '../types.ts';
 
 const Chordbookerizer = () => {
     const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
@@ -30,12 +31,9 @@ const Chordbookerizer = () => {
 
             <InputControls updatePreview={updatePreview}/>
             <OutputControls 
-                optPianoChords={showPianoChords}
-                optFlatsKeyLabel={showFlatsKeyLabel}
-                optFlatsSongChords={showFlatsSongChords}
-                setOptPianoChords={setShowPianoChords}
-                setOptFlatsKeyLabel={setShowFlatsKeyLabel}
-                setOptFlatsSongChords={setShowFlatsSongChords}
+                optPianoChordsController={new ReactStateController(showPianoChords, setShowPianoChords)}
+                optFlatsKeyLabelController={new ReactStateController(showFlatsKeyLabel, setShowFlatsKeyLabel)}
+                optFlatsSongChordsController={new ReactStateController(showFlatsSongChords, setShowFlatsSongChords)}
                 previewRef={previewRef}
             />
 

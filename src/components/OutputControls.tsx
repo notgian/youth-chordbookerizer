@@ -1,8 +1,7 @@
 import type { OutputControlProps } from "../types";
 
 const OutputControls: React.FC<OutputControlProps> = ({ 
-        setOptFlatsKeyLabel, setOptFlatsSongChords, setOptPianoChords, 
-        optFlatsKeyLabel, optFlatsSongChords, optPianoChords, previewRef
+        optFlatsKeyLabelController, optFlatsSongChordsController, optPianoChordsController, previewRef
     }) => 
     {
 
@@ -36,8 +35,8 @@ const OutputControls: React.FC<OutputControlProps> = ({
                     Preview Piano Chords
                     <input
                         type="checkbox" 
-                        checked={optPianoChords}
-                        onChange={(e) => setOptPianoChords(e.target.checked)}
+                        checked={optPianoChordsController.value}
+                        onChange={(e) => optPianoChordsController.set(e.target.checked)}
                     />
                     <span className="checkmark"></span>
                 </label>
@@ -46,8 +45,8 @@ const OutputControls: React.FC<OutputControlProps> = ({
                     Flats in Song Key Label
                     <input
                         type="checkbox" 
-                        checked={optFlatsKeyLabel}
-                        onChange={(e) => setOptFlatsKeyLabel(e.target.checked)}
+                        checked={optFlatsKeyLabelController.value}
+                        onChange={(e) => optFlatsKeyLabelController.set(e.target.checked)}
                     />
                     <span className="checkmark"></span>
                 </label>
@@ -56,8 +55,8 @@ const OutputControls: React.FC<OutputControlProps> = ({
                     Flats in Chords
                     <input
                         type="checkbox" 
-                        checked={optFlatsSongChords}
-                        onChange={(e) => setOptFlatsSongChords(e.target.checked)}
+                        checked={optFlatsSongChordsController.value}
+                        onChange={(e) => optFlatsSongChordsController.set(e.target.checked)}
                     />
                     <span className="checkmark"></span>
                 </label>

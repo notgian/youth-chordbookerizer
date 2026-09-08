@@ -1,5 +1,19 @@
 import type { RefObject } from "react";
 
+export class ReactStateController<T>{
+    private setFunc: (e:T) => void;
+    value: T;
+
+    constructor(myvar: T, func: (e:T)=>void) {
+        this.value = myvar;
+        this.setFunc = func;
+    }
+
+    set(val: T) {
+        this.setFunc(val);
+    }
+}
+
 export interface InputProps {
     updatePreview: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
 }
@@ -13,13 +27,9 @@ export interface OutputPreviewProps {
 }
 
 export interface OutputControlProps {
-    setOptPianoChords: (e: boolean) => void;
-    setOptFlatsKeyLabel: (e: boolean) => void;
-    setOptFlatsSongChords: (e: boolean) => void;
-
-    optPianoChords: boolean;
-    optFlatsKeyLabel: boolean;
-    optFlatsSongChords: boolean;
+    optPianoChordsController: ReactStateController<boolean>;
+    optFlatsKeyLabelController: ReactStateController<boolean>;
+    optFlatsSongChordsController: ReactStateController<boolean>;
 
     previewRef: RefObject<HTMLElement | null>;
 }
