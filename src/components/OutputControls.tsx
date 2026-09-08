@@ -1,7 +1,8 @@
 import type { OutputControlProps } from "../types";
 
 const OutputControls: React.FC<OutputControlProps> = ({ 
-        setOptFlatsKeyLabel, setOptFlatsSongChords, setOptPianoChords, optFlatsKeyLabel, optFlatsSongChords, optPianoChords, previewRef
+        setOptFlatsKeyLabel, setOptFlatsSongChords, setOptPianoChords, 
+        optFlatsKeyLabel, optFlatsSongChords, optPianoChords, previewRef
     }) => 
     {
 
@@ -60,7 +61,6 @@ const OutputControls: React.FC<OutputControlProps> = ({
                     />
                     <span className="checkmark"></span>
                 </label>
-
             </span>
 
             <button 

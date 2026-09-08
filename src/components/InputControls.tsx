@@ -11,6 +11,16 @@ const InputControls: React.FC<InputProps> = ({updatePreview}) => {
         }
     }
 
+    const timeSignatureClipValues = (e:React.ChangeEvent<HTMLInputElement>) => {
+        if (Number(e.target.value) < 0) {
+            return e.target.value = "0"
+        }
+            
+        if (Number(e.target.value) > 99) {
+            return e.target.value = "0"
+        }
+    }
+
     return (
 
         <div className="input-controls">
@@ -55,19 +65,27 @@ const InputControls: React.FC<InputProps> = ({updatePreview}) => {
             <span className="input-time-signature">
                 <span>
                     <input 
-                        onChange={updatePreview}
+                        onChange={ (e) => {
+                            updatePreview(e);
+                            timeSignatureClipValues(e);
+                        }}
                         className="input-signature"
                         id="input-signature-top"
                         type="number"
                         placeholder="4"
+                        max="99"
                     />
                     <span className="input-signature-sep">/</span>
                     <input 
-                        onChange={updatePreview}
+                        onChange={ (e) => {
+                            updatePreview(e);
+                            timeSignatureClipValues(e);
+                        }}
                         className="input-signature"
                         id="input-signature-bot"
                         type="number"
                         placeholder="4"
+                        max="99"
                     />
                 </span>
             </span>
