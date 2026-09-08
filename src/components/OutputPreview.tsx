@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { useSyncExternalStore } from 'react';
-import { sharpToFlat, sharpToFlatChord, transposeLine } from '../transposer';
+import { sharpToFlat, sharpToFlatChord, transposeChord, transposeLine } from '../transposer';
 import type { OutputPreviewProps } from '../types';
 
 /* constants for styles*/
@@ -106,7 +106,8 @@ function subscribe(callback: () => void) {
 
 let cachedSnapshot = {
     title: '',
-    key: '',
+    keyNote: '',
+    keyType: '',
     keySig: '',
     capo: '',
     chords: ''
@@ -119,9 +120,11 @@ const getRawTextSnapshot = () => {
     const textarea = document.getElementById("input-chords") as HTMLTextAreaElement | null; 
     const chords = textarea?.value ?? '';
 
-    const keyName = document.getElementById("input-key-name") as HTMLSelectElement | null; 
-    const keyType = document.getElementById("input-key-type") as HTMLSelectElement | null; 
-    const key = keyName && keyName.value.trim() && keyType ? keyName.value.trim() + ' ' + keyType.value.trim() : '';
+    const keyNoteEl = document.getElementById("input-key-name") as HTMLSelectElement | null; 
+    const keyTypeEl = document.getElementById("input-key-type") as HTMLSelectElement | null; 
+
+    const keyNote = keyNoteEl && keyNoteEl.value.trim() ? keyNoteEl.value.trim(): '';
+    const keyType = keyTypeEl && keyTypeEl.value.trim() ? keyTypeEl.value.trim(): '';
     
     const keySigTop = document.getElementById("input-signature-top") as HTMLSelectElement | null; 
     const keySigBot = document.getElementById("input-signature-bot") as HTMLSelectElement | null; 
@@ -132,21 +135,25 @@ const getRawTextSnapshot = () => {
     const capo = capoInput && Number(capoInput.value?.trim()) > 0 ? capoInput.value.trim() : '';
     
     let cs = cachedSnapshot;
-    if (cs.title !== title || cs.chords !== chords || cs.key !== key || cs.keySig !== keySig || cs.capo !== capo ) {
-        cachedSnapshot = { title, key, chords, keySig, capo};
+    if (cs.title !== title || cs.chords !== chords || cs.keyNote !== keyNote  || cs.keyType !== keyType || cs.keySig !== keySig || cs.capo !== capo ) {
+        cachedSnapshot = { title, keyNote, keyType, chords, keySig, capo};
     }
 
     return cachedSnapshot
 };
 
 // Component
-const OutputPreview: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKeyLabel, optFlatsSongChords, previewRef}) => {
+const OutputPreview: React.FC<OutputPreviewProps> = ({
+    optPianoChords, optFlatsKeyLabel, optFlatsSongChords, optOverallTransposeFactor, previewRef
+}) => {
     const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
     const titleText = snapshot.title;
-    const key = snapshot.key;
+    const keyNote = snapshot.keyNote;
+    const keyType = snapshot.keyType;
     const keySig = snapshot.keySig;
     const capo = snapshot.capo;
     const chordsText = snapshot.chords;
+    const additionalTranspose = optOverallTransposeFactor
     
     // Output options
 
@@ -155,15 +162,13 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKe
 
         if (titleText)
             preview.push(<h3 key='title' style={outputstyles.h3}>{capo && !optPianoChords ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
-        if (key) {
-            let keyLabel;
-            if (!optFlatsKeyLabel)
-                keyLabel = key;
-            else {
-                let keySplit = key.split(' ')
-                keyLabel = sharpToFlat(keySplit[0]) + ' ' + keySplit[1];
-            }
-            preview.push(<p key='key' style={outputstyles.text}>Key: {keyLabel}</p>)
+        if (keyNote && keyType) {
+            let note = keyNote;
+            if (additionalTranspose)
+                note = transposeChord(note, additionalTranspose) ?? '';
+
+            note = optFlatsKeyLabel ? sharpToFlat(note) : note;
+            preview.push(<p key='key' style={outputstyles.text}>Key: {note + ' ' + keyType}</p>)
         
         }
         if (keySig)
@@ -187,6 +192,7 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({optPianoChords, optFlatsKe
                     return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
                 }
                 else if (containsChords(line)) {
+                    line = optOverallTransposeFactor ? transposeLine(line, optOverallTransposeFactor) : line;
                     if (optPianoChords && Number(capo) > 0) {
                         let t = transposeLine(line, Number(capo), optFlatsSongChords)
                         return <p key={index} style={outputstyles.chords}>{t}</p>;

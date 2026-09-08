@@ -199,7 +199,7 @@ function transposeChord(chord: string, transposeFactor: number, outputFlat: bool
  * @param {boolean} [outputFlat=false] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
  * @returns {string|undefined} The transposed chord line string, or `undefined` if one of the input chords is invalid.
  */
-function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = false) {
+function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = false): string {
     // get the converted chords of each first
     let startsWithSpace = false;
     let chords = line.split(/[\s]+/)
@@ -214,7 +214,7 @@ function transposeLine(line: string, transposeFactor: number, outputFlat: boolea
     for (let i = 0; i < initialChords.length; i++) {
         // if one of the converted chords is undefined, return early
         if (convertedChords[i] == undefined)
-            return initialChords
+            return line
         else if (initialChords[i] != convertedChords[i]) {
             fullMatch = false;
             break;

@@ -121,13 +121,34 @@
 
 .transpose-controls-value sup {
     vertical-align: top;
-    font-size: 0.6em;
+    font-size: 0.7em;
+}
+
+.transpose-controls-buttons {
+    transition: all 0.25s ease-out;
 }
 
 .transpose-controls-buttons button {
     color: black;
+    background-color: white;
     font-weight: bolder;
-    padding: 0 3pt;
+    padding: 2pt 5pt;
     font-size: 12pt;
-    font-family: 'Courier New', Courier, monospace
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 0;
+    border: none;
+    transition: all 0.25s ease-out;
+}
+
+.transpose-controls-buttons:hover button {
+    background-color: #eee;
+}
+
+.transpose-controls-buttons > button:first-child {
+    border-right: #efefef 1px solid;
+}
+
+.transpose-controls-buttons button:hover {
+    background-color: #ccc;
+    color: #333;
 }
