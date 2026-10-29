@@ -1,4 +1,4 @@
-const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
+export const Notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"] as const;
 
 const flatAliases = {
   Db: "C#",
@@ -8,28 +8,32 @@ const flatAliases = {
   Bb: "A#",
 } as const;
 
-export type SharpNote = (typeof notes)[number];
+export type SharpNote = (typeof Notes)[number];
 export type FlatNote = keyof typeof flatAliases;
 export type Note = SharpNote | FlatNote;
 
 const getNoteIndex = (note: Note): number => {
   const canonical = note in flatAliases ? flatAliases[note as FlatNote] : note;
-  return notes.indexOf(canonical as SharpNote);
+  return Notes.indexOf(canonical as SharpNote);
 };
 
 export const wholeStep = (note: Note): SharpNote => {
   const index = getNoteIndex(note);
-  return notes[(index + 2) % notes.length];
+  return Notes[(index + 2) % Notes.length];
 };
 
 export const halfStep = (note: Note): SharpNote => {
   const index = getNoteIndex(note);
-  return notes[(index + 1) % notes.length];
+  return Notes[(index + 1) % Notes.length];
 };
 
 export const nSteps = (note: Note, n: number): SharpNote => {
   const index = getNoteIndex(note);
-  return notes[(index + n) % notes.length];
+  return Notes[(index + n) % Notes.length];
+};
+
+export const assureSharp = (note: Note): SharpNote => {
+  return Notes[getNoteIndex(note)];
 };
 
 export const chordQualities = [
