@@ -1,6 +1,6 @@
 import { expect, test } from "@rstest/core";
 
-import { transposeChord, transposeLine } from "../transposer.ts";
+import { transposeChord, transposeLine } from "../utils/transposer.ts";
 
 /* transposeChord tests for individual chord transpositions */
 test("Major Chords up a whole step (+2)", () => {
