@@ -3,24 +3,16 @@ import type { InputProps } from "../types";
 const capoClipValues = (e: React.ChangeEvent<HTMLInputElement>): void => {
   if (Number(e.target.value) < 0) {
     e.target.value = "0";
-    return;
-  }
-
-  if (Number(e.target.value) > 11) {
+  } else if (Number(e.target.value) > 11) {
     e.target.value = "0";
-    return;
   }
 };
 
 const timeSignatureClipValues = (e: React.ChangeEvent<HTMLInputElement>): void => {
   if (Number(e.target.value) < 0) {
     e.target.value = "0";
-    return;
-  }
-
-  if (Number(e.target.value) > 99) {
+  } else if (Number(e.target.value) > 99) {
     e.target.value = "0";
-    return;
   }
 };
 

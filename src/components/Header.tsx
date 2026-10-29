@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import YouthLogo from "../assets/youthsjrm.svg";
 
-const Header = () => {
+const Header = (): React.JSX.Element => {
   return (
     <header>
       <span className="header-content header-page-info">

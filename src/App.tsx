@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Chordbookerizer from "./components/Chordbookerizer.tsx";
 import Header from "./components/Header.tsx";
 
-const App = () => {
+const App = (): React.JSX.Element => {
   return (
     <div className="wrapper">
       <Header />

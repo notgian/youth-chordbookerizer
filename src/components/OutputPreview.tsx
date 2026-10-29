@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { useSyncExternalStore } from "react";
+import { Fragment, useSyncExternalStore } from "react";
 
 import type { OutputPreviewProps } from "../types";
 import { containsChords, containsChordsSection } from "../utils/chords";
@@ -55,8 +55,8 @@ const outputstyles: Record<string, CSSProperties> = {
 
 // For the sync external store
 function subscribe(callback: () => void) {
-  window.addEventListener("update-preview", callback);
-  return () => window.removeEventListener("update-preview", callback);
+  globalThis.addEventListener("update-preview", callback);
+  return () => globalThis.removeEventListener("update-preview", callback);
 }
 
 let cachedSnapshot = {
@@ -69,14 +69,14 @@ let cachedSnapshot = {
 };
 
 const getRawTextSnapshot = () => {
-  const titleInput = document.getElementById("input-title");
+  const titleInput = document.querySelector("#input-title");
   const title = titleInput instanceof HTMLInputElement ? titleInput.value : "";
 
-  const textarea = document.getElementById("input-chords");
+  const textarea = document.querySelector("#input-chords");
   const chords = textarea instanceof HTMLTextAreaElement ? textarea.value : "";
 
-  const keyNoteEl = document.getElementById("input-key-name");
-  const keyTypeEl = document.getElementById("input-key-type");
+  const keyNoteEl = document.querySelector("#input-key-name");
+  const keyTypeEl = document.querySelector("#input-key-type");
 
   const keyNote =
     keyNoteEl instanceof HTMLSelectElement && keyNoteEl && keyNoteEl.value.trim()
@@ -87,8 +87,8 @@ const getRawTextSnapshot = () => {
       ? keyTypeEl.value.trim()
       : "";
 
-  const keySigTop = document.getElementById("input-signature-top");
-  const keySigBot = document.getElementById("input-signature-bot");
+  const keySigTop = document.querySelector("#input-signature-top");
+  const keySigBot = document.querySelector("#input-signature-bot");
   const keySig =
     keySigTop instanceof HTMLSelectElement &&
     keySigBot instanceof HTMLSelectElement &&
@@ -96,16 +96,16 @@ const getRawTextSnapshot = () => {
     keySigTop.value.trim() &&
     keySigBot &&
     keySigBot.value.trim()
-      ? keySigTop.value.trim() + "/" + keySigBot.value.trim()
+      ? `${keySigTop.value.trim()}/${keySigBot.value.trim()}`
       : "";
 
-  const capoInput = document.getElementById("input-capo");
+  const capoInput = document.querySelector("#input-capo");
   const capo =
     capoInput instanceof HTMLInputElement && capoInput && Number(capoInput.value?.trim()) > 0
       ? capoInput.value.trim()
       : "";
 
-  let cs = cachedSnapshot;
+  const cs = cachedSnapshot;
   if (
     cs.title !== title ||
     cs.chords !== chords ||
@@ -130,10 +130,10 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({
 }) => {
   const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
   const titleText = snapshot.title;
-  const keyNote = snapshot.keyNote;
-  const keyType = snapshot.keyType;
-  const keySig = snapshot.keySig;
-  const capo = snapshot.capo;
+  const { keyNote } = snapshot;
+  const { keyType } = snapshot;
+  const { keySig } = snapshot;
+  const { capo } = snapshot;
   const chordsText = snapshot.chords;
   const additionalTranspose = optOverallTransposeFactor;
 
@@ -142,74 +142,88 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({
   const renderPreview = (): React.JSX.Element[] => {
     let preview: React.JSX.Element[] = [];
 
-    if (titleText)
+    if (titleText) {
       preview.push(
         <h3 key="title" style={outputstyles.h3}>
-          {capo && !optPianoChords ? titleText + " (CAPO " + capo + ")" : titleText}
+          {capo && !optPianoChords ? `${titleText} (CAPO ${capo})` : titleText}
         </h3>,
       );
+    }
     if (keyNote && keyType) {
       let note = keyNote;
-      if (additionalTranspose) note = transposeChord(note, additionalTranspose) ?? "";
+      if (additionalTranspose) {
+        note = transposeChord(note, additionalTranspose) ?? "";
+      }
 
       note = optFlatsKeyLabel ? sharpToFlat(note) : note;
       preview.push(
         <p key="key" style={outputstyles.text}>
-          Key: {note + " " + keyType}
+          Key: {`${note} ${keyType}`}
         </p>,
       );
     }
-    if (keySig)
+    if (keySig) {
       preview.push(
         <p key="keySig" style={outputstyles.text}>
           {keySig}
         </p>,
       );
-    if (capo && !optPianoChords)
+    }
+    if (capo && !optPianoChords) {
       preview.push(
         <p key="capo" style={outputstyles.text}>
           Capo {capo}
         </p>,
       );
+    }
 
     // Add a space before chords IFF title/other stuff
     // precede the chords
-    if (preview.length > 0) preview.push(<br key="top-br" />);
+    if (preview.length > 0) {
+      preview.push(<br key="top-br" />);
+    }
 
     if (chordsText) {
-      let chords = chordsText.split("\n").flatMap((line, index) => {
-        if (line.trim() === "") {
+      const chords = chordsText.split("\n").flatMap((lineRaw, index) => {
+        if (lineRaw.trim() === "") {
           return [];
         }
 
-        const chordSectionLabel: string = containsChordsSection(line) ?? "";
+        const chordSectionLabel: string = containsChordsSection(lineRaw) ?? "";
         if (chordSectionLabel) {
-          let spaces: React.JSX.Element[] = [];
+          const spaces: React.JSX.Element[] = [];
 
-          let spaceCount = 2;
+          const spaceCount = 2;
           for (let i = 0; i < spaceCount; i++) {
             spaces.push(<br key={`space-${index}-${i}`} />);
           }
 
-          return spaces.concat([
-            <p key={index} style={outputstyles.section}>
-              {chordSectionLabel.toUpperCase()}
-            </p>,
-          ]);
-        } else if (containsChords(line)) {
-          line = optOverallTransposeFactor ? transposeLine(line, optOverallTransposeFactor) : line;
+          return (
+            <Fragment key={`section-${index}`}>
+              {spaces}
+              <p style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>
+            </Fragment>
+          );
+        }
+        if (containsChords(lineRaw)) {
+          const line = optOverallTransposeFactor
+            ? transposeLine(lineRaw, optOverallTransposeFactor)
+            : lineRaw;
           if (optPianoChords && Number(capo) > 0) {
-            let t = transposeLine(line, Number(capo), optFlatsSongChords);
+            const t = transposeLine(line, Number(capo), optFlatsSongChords);
             return (
               <p key={index} style={outputstyles.chords}>
                 {t}
               </p>
             );
-          } else if (optFlatsSongChords) {
+          }
+          if (optFlatsSongChords) {
             let flatsLine = line;
-            let tokens = flatsLine.split(/[\s]+/g);
-            for (let token of tokens) {
-              if (token === "" || token.length < 1) continue;
+            const tokens = flatsLine.split(/[\s]+/g);
+            for (const token of tokens) {
+              if (token === "" || token.length === 0) {
+                continue;
+              }
               flatsLine = flatsLine.replace(token, sharpToFlatChord(token));
             }
             return (
@@ -217,23 +231,22 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({
                 {flatsLine}
               </p>
             );
-          } else {
-            return (
-              <p key={index} style={outputstyles.chords}>
-                {line}
-              </p>
-            );
           }
+          return (
+            <p key={index} style={outputstyles.chords}>
+              {line}
+            </p>
+          );
         }
 
         return (
           <p key={index} style={outputstyles.text}>
-            {line}
+            {lineRaw}
           </p>
         );
       });
 
-      preview = preview.concat(chords);
+      preview = [...preview, ...chords];
     }
 
     return preview;

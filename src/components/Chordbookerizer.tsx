@@ -7,16 +7,16 @@ import { OutputControls } from "./OutputControls.tsx";
 import OutputPreview from "./OutputPreview";
 
 const updatePreview = () => {
-  window.dispatchEvent(new CustomEvent("update-preview"));
+  globalThis.dispatchEvent(new CustomEvent("update-preview"));
 };
 
-const Chordbookerizer = () => {
+const Chordbookerizer = (): React.JSX.Element => {
   const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
   const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
   const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
   const [overallTransposeFactor, setOverallTransposeFactor] = useState<number>(0);
   // For copying
-  const previewRef = useRef<HTMLElement>(null);
+  const previewRef = useRef<HTMLElement>(undefined);
 
   return (
     <div className="chordbookerizer">

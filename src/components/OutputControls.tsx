@@ -7,25 +7,27 @@ const OutputControls: React.FC<OutputControlProps> = ({
   optOverallTransposeFactorController,
   previewRef,
 }) => {
-  const handleCopyPreview = async () => {
-    if (!previewRef.current) {
-      alert("Failed to copy chords! Please try again.");
-      return;
-    }
+  const handleCopyPreview = () => {
+    void (async () => {
+      if (!previewRef.current) {
+        alert("Failed to copy chords! Please try again.");
+        return;
+      }
 
-    try {
-      const htmlBlob = new Blob([previewRef.current.innerHTML], { type: "text/html" });
+      try {
+        const htmlBlob = new Blob([previewRef.current.innerHTML], { type: "text/html" });
 
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          "text/html": htmlBlob,
-        }),
-      ]);
+        await navigator.clipboard.write([
+          new ClipboardItem({
+            "text/html": htmlBlob,
+          }),
+        ]);
 
-      alert("Copied chords to clipboard. Paste directly into Google Docs!");
-    } catch {
-      alert("Failed to copy chords! Please try again.");
-    }
+        alert("Copied chords to clipboard. Paste directly into Google Docs!");
+      } catch {
+        alert("Failed to copy chords! Please try again.");
+      }
+    })();
   };
 
   const handleTranspose = (factor: number) => {
@@ -35,7 +37,9 @@ const OutputControls: React.FC<OutputControlProps> = ({
 
     const currentValue = optOverallTransposeFactorController.value;
     let newValue = currentValue + factor;
-    if (newValue < -11 || newValue > 11) newValue = 0;
+    if (newValue < -11 || newValue > 11) {
+      newValue = 0;
+    }
 
     optOverallTransposeFactorController.set(newValue);
   };
@@ -83,15 +87,21 @@ const OutputControls: React.FC<OutputControlProps> = ({
             <sup>
               {(() => {
                 const transposeFactor = optOverallTransposeFactorController.value;
-                if (transposeFactor === 0) return "";
-                else if (transposeFactor > 0) return "+";
-                else return "-";
+                if (transposeFactor === 0) {
+                  return "";
+                }
+                if (transposeFactor > 0) {
+                  return "+";
+                }
+                return "-";
               })()}
             </sup>
             {(() => {
               const transposeFactor = optOverallTransposeFactorController.value;
-              if (transposeFactor === 0) return "";
-              else return Math.abs(transposeFactor);
+              if (transposeFactor === 0) {
+                return "";
+              }
+              return Math.abs(transposeFactor);
             })()}
           </span>
         </span>

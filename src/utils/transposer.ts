@@ -1,6 +1,6 @@
 const NOTES_SHARPS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
-const NOTES_FLATS = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
+const NOTES_FLATS = new Set(["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]);
 
 // Utility functions
 
@@ -33,16 +33,20 @@ function sharpToFlat(note: string): string {
  * @param {string} note - The chord to convert from sharp to flat
  * @return {string} The converted chord.
  */
-function sharpToFlatChord(chord: string): string {
-  chord = chord.trim();
-  if (chord[1] != "#") return chord;
+function sharpToFlatChord(rawChord: string): string {
+  const chord = rawChord.trim();
+  if (chord[1] !== "#") {
+    return chord;
+  }
 
-  let chordNote = chord.substring(0, 2);
-  let newChord = chord.replace(chordNote, sharpToFlat(chordNote));
+  const chordNote = chord.slice(0, 2);
+  const newChord = chord.replace(chordNote, sharpToFlat(chordNote));
 
   // Handle bass note
-  let slashSep = newChord.split("/");
-  if (slashSep.length > 1) return slashSep[0] + "/" + sharpToFlat(slashSep[1]);
+  const slashSep = newChord.split("/");
+  if (slashSep.length > 1) {
+    return `${slashSep[0]}/${sharpToFlat(slashSep[1])}`;
+  }
 
   return newChord;
 }
@@ -76,16 +80,20 @@ function flatToSharp(note: string): string {
  * @param {string} note - The chord to convert from sharp to flat
  * @return {string} The converted chord.
  */
-function flatToSharpChord(chord: string): string {
-  chord = chord.trim();
-  if (chord[1] != "#") return chord;
+function flatToSharpChord(rawChord: string): string {
+  const chord = rawChord.trim();
+  if (chord[1] !== "#") {
+    return chord;
+  }
 
-  let chordNote = chord.substring(0, 2);
-  let newChord = chord.replace(chordNote, flatToSharp(chordNote));
+  const chordNote = chord.slice(0, 2);
+  const newChord = chord.replace(chordNote, flatToSharp(chordNote));
 
   // Handle bass note
-  let slashSep = newChord.split("/");
-  if (slashSep.length > 1) return slashSep[0] + "/" + flatToSharp(slashSep[1]);
+  const slashSep = newChord.split("/");
+  if (slashSep.length > 1) {
+    return `${slashSep[0]}/${flatToSharp(slashSep[1])}`;
+  }
 
   return newChord;
 }
@@ -96,67 +104,75 @@ function flatToSharpChord(chord: string): string {
  * Transposes an individual chord given a transposition factor (one unit of this factor is equivalent to a half step)
  *
  * @param {string} chord - the chord to transpose
- * @param {number} transposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
+ * @param {number} rawTransposeFactor - the factor of which to transpose the chord (i.e. -2, +2 is whole step down or up)
  * @param {boolean} [outputFlat=false] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
  * @returns {string|undefined} The transposed chord string, or `undefined` if the input chord is invalid.
  */
 function transposeChord(
-  chord: string,
-  transposeFactor: number,
-  outputFlat: boolean = false,
+  rawChord: string,
+  rawTransposeFactor: number,
+  outputFlat = false,
 ): string | undefined {
   // force trim the chord
-  chord = chord.trim();
-  let note = chord.substring(0, 2);
+  const chord = rawChord.trim();
+  let note = chord.slice(0, 2);
   let isAccidental = true;
   // let isFlat = false;
   // if not sharp or flat, only the first char is the note
-  if (note[1] != "#" && note[1] != "b") {
-    note = note[0];
+  if (note[1] !== "#" && note[1] !== "b") {
+    [note] = note;
     isAccidental = false;
   }
   // if sharp/flat, check if flat; convert flat to sharp
-  else if (note[1] == "b") {
+  else if (note[1] === "b") {
     note = flatToSharp(note);
     // isFlat = true;
   }
 
   // edge case: passed chord does not have a valid note
-  if (!NOTES_SHARPS.includes(note) && !NOTES_FLATS.includes(note)) return undefined;
+  if (!NOTES_SHARPS.includes(note) && !NOTES_FLATS.has(note)) {
+    return undefined;
+  }
 
   // return if transposed chord will be the same
-  transposeFactor %= 12;
-  if (transposeFactor == 0) return chord;
+  const transposeFactor = rawTransposeFactor % 12;
+  if (transposeFactor === 0) {
+    return chord;
+  }
 
   let transposedOffset = (NOTES_SHARPS.indexOf(note) + transposeFactor) % 12;
-  if (transposedOffset < 0) transposedOffset += 12;
+  if (transposedOffset < 0) {
+    transposedOffset += 12;
+  }
 
   note = NOTES_SHARPS[transposedOffset];
 
   // convert sharp back to flat if necessary
-  if (note.length > 1 && note[1] == "#" && outputFlat) {
+  if (note.length > 1 && note[1] === "#" && outputFlat) {
     note = sharpToFlat(note);
   }
 
-  let chordSuffix = chord.substring(isAccidental ? 2 : 1);
+  let chordSuffix = chord.slice(isAccidental ? 2 : 1);
 
   // if there is a bass note, transpose this too
   if (chordSuffix.includes("/")) {
     const slashSplit = chordSuffix.split("/");
     if (
       slashSplit.length > 1 &&
-      (NOTES_SHARPS.includes(slashSplit[1]) || NOTES_FLATS.includes(slashSplit[1]))
+      (NOTES_SHARPS.includes(slashSplit[1]) || NOTES_FLATS.has(slashSplit[1]))
     ) {
-      let bassNote = slashSplit[1];
+      let [, bassNote] = slashSplit;
 
       transposedOffset = (NOTES_SHARPS.indexOf(bassNote) + transposeFactor) % 12;
-      if (transposedOffset < 0) transposedOffset += 12;
+      if (transposedOffset < 0) {
+        transposedOffset += 12;
+      }
 
       bassNote = NOTES_SHARPS[transposedOffset];
-      if (bassNote.length > 1 && bassNote[1] == "#" && outputFlat) {
+      if (bassNote.length > 1 && bassNote[1] === "#" && outputFlat) {
         bassNote = sharpToFlat(bassNote);
       }
-      chordSuffix = slashSplit[0] + "/" + bassNote;
+      chordSuffix = `${slashSplit[0]}/${bassNote}`;
     }
   }
   return note + chordSuffix;
@@ -170,7 +186,7 @@ function transposeChord(
  * @param {boolean} [outputFlat=false] - Optional. If true, accidental notes will be formatted as flats (b). If false, sharps (#) will be used.
  * @returns {string|undefined} The transposed chord line string, or `undefined` if one of the input chords is invalid.
  */
-function transposeLine(line: string, transposeFactor: number, outputFlat: boolean = false): string {
+function transposeLine(line: string, transposeFactor: number, outputFlat = false): string {
   // get the converted chords of each first
   let startsWithSpace = false;
   let chords = line.split(/[\s]+/);
@@ -186,15 +202,19 @@ function transposeLine(line: string, transposeFactor: number, outputFlat: boolea
   let fullMatch = true;
   for (let i = 0; i < initialChords.length; i++) {
     // if one of the converted chords is undefined, return early
-    if (convertedChords[i] == undefined) return line;
-    else if (initialChords[i] != convertedChords[i]) {
+    if (convertedChords[i] === undefined) {
+      return line;
+    }
+    if (initialChords[i] !== convertedChords[i]) {
       fullMatch = false;
       break;
     }
   }
 
   // return the same line if the transposed chords are exactly the same
-  if (fullMatch) return line;
+  if (fullMatch) {
+    return line;
+  }
 
   const spaces = line.match(/[\s]+/g);
   let newLine = startsWithSpace && spaces ? spaces[0] : "";
@@ -204,11 +224,14 @@ function transposeLine(line: string, transposeFactor: number, outputFlat: boolea
     const currPreChord = initialChords[i] ?? "";
     const currSpace = spaces && spaces[i + spaceOffset] ? spaces[i + spaceOffset] : " ";
     const spaceDiff = currPreChord.length - currChord.length;
-    if (spaceDiff == 0) newLine += currChord + currSpace;
-    else {
+    if (spaceDiff === 0) {
+      newLine += currChord + currSpace;
+    } else {
       let newSpaceLen = currSpace.length + spaceDiff;
       // require that there be at least 1 space
-      if (newSpaceLen <= 0) newSpaceLen = 1;
+      if (newSpaceLen <= 0) {
+        newSpaceLen = 1;
+      }
 
       newLine += currChord + " ".repeat(newSpaceLen);
     }

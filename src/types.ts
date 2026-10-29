@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 
 export class ReactStateController<T> {
-  private setFunc: (e: T) => void;
+  private readonly setFunc: (e: T) => void;
   value: T;
 
   constructor(myvar: T, func: (e: T) => void) {
@@ -9,31 +9,31 @@ export class ReactStateController<T> {
     this.setFunc = func;
   }
 
-  set(val: T) {
+  set(val: T): void {
     this.setFunc(val);
   }
 }
 
-export interface InputProps {
+export type InputProps = {
   updatePreview: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => void;
-}
+};
 
-export interface OutputPreviewProps {
+export type OutputPreviewProps = {
   optPianoChords: boolean;
   optFlatsKeyLabel: boolean;
   optFlatsSongChords: boolean;
   optOverallTransposeFactor: number;
 
-  previewRef: RefObject<HTMLElement | null>;
-}
+  previewRef: RefObject<HTMLElement | undefined>;
+};
 
-export interface OutputControlProps {
+export type OutputControlProps = {
   optPianoChordsController: ReactStateController<boolean>;
   optFlatsKeyLabelController: ReactStateController<boolean>;
   optFlatsSongChordsController: ReactStateController<boolean>;
   optOverallTransposeFactorController: ReactStateController<number>;
 
-  previewRef: RefObject<HTMLElement | null>;
-}
+  previewRef: RefObject<HTMLElement | undefined>;
+};
