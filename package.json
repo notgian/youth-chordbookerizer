@@ -1,29 +1,40 @@
 {
-    "name": "chordbookerizer",
-    "version": "1.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "build": "rsbuild build",
-        "dev": "rsbuild",
-        "preview": "rsbuild preview",
-        "test": "rstest"
-    },
-    "dependencies": {
-        "@fortawesome/free-brands-svg-icons": "^7.3.1",
-        "@fortawesome/free-regular-svg-icons": "^7.3.1",
-        "@fortawesome/free-solid-svg-icons": "^7.3.1",
-        "@fortawesome/react-fontawesome": "^3.5.0",
-        "react": "^19.2.8",
-        "react-dom": "^19.2.8"
-    },
-    "devDependencies": {
-        "@rsbuild/core": "^2.1.13",
-        "@rsbuild/plugin-react": "^2.1.0",
-        "@rstest/core": "^0.11.10",
-        "@types/node": "^24.13.3",
-        "@types/react": "^19.2.18",
-        "@types/react-dom": "^19.2.4",
-        "typescript": "^6.0.3"
-    }
+  "name": "chordbookerizer",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "dev": "rsbuild",
+    "preview": "rsbuild preview",
+    "test": "rstest",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "prepare": "simple-git-hooks"
+  },
+  "dependencies": {
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
+    "@fortawesome/free-regular-svg-icons": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/react-fontawesome": "^3.5.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@rsbuild/core": "^2.1.13",
+    "@rsbuild/plugin-react": "^2.1.0",
+    "@rstest/core": "^0.11.10",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "oxlint-tsgolint": "^7.0.2005",
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "^6.0.3"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bun run lint:fix && bun run fmt && git add ."
+  }
 }

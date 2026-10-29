@@ -1,68 +1,97 @@
-import type { CSSProperties } from 'react'
-import { useSyncExternalStore } from 'react';
-import { sharpToFlat, sharpToFlatChord, transposeChord, transposeLine } from '../transposer';
-import type { OutputPreviewProps } from '../types';
+import type { CSSProperties } from "react";
+import { useSyncExternalStore } from "react";
+
+import { sharpToFlat, sharpToFlatChord, transposeChord, transposeLine } from "../transposer";
+import type { OutputPreviewProps } from "../types";
 
 /* constants for styles*/
-const chordColor = '#4a86e8'
-const chordsFont = 'Arial'
+const chordColor = "#4a86e8";
+const chordsFont = "Arial";
 
 const outputstyles: Record<string, CSSProperties> = {
-    h1: {fontSize: '18pt', textAlign: 'center', margin: 0, color: '#000', fontFamily: chordsFont},
-    h2: {fontSize: '12pt', textAlign: 'center', textDecoration: 'underline', margin: 0, color: '#000', fontFamily: chordsFont},
-    h3: {fontSize: '12pt', margin: 0, color: '#000', fontFamily: chordsFont},
-    chords : {fontSize: '11pt', whiteSpace: 'pre-wrap', margin: 0, color: chordColor, fontFamily: chordsFont},
-    text: {fontSize: '11pt', margin: 0, color: '#000', fontFamily: chordsFont},
-    section: {fontSize: '11pt', textDecoration: 'underline', margin: 0, color: '#000', fontFamily: chordsFont}
-}
+  h1: {
+    fontSize: "18pt",
+    textAlign: "center",
+    margin: 0,
+    color: "#000",
+    fontFamily: chordsFont,
+  },
+  h2: {
+    fontSize: "12pt",
+    textAlign: "center",
+    textDecoration: "underline",
+    margin: 0,
+    color: "#000",
+    fontFamily: chordsFont,
+  },
+  h3: { fontSize: "12pt", margin: 0, color: "#000", fontFamily: chordsFont },
+  chords: {
+    fontSize: "11pt",
+    whiteSpace: "pre-wrap",
+    margin: 0,
+    color: chordColor,
+    fontFamily: chordsFont,
+  },
+  text: {
+    fontSize: "11pt",
+    margin: 0,
+    color: "#000",
+    fontFamily: chordsFont,
+  },
+  section: {
+    fontSize: "11pt",
+    textDecoration: "underline",
+    margin: 0,
+    color: "#000",
+    fontFamily: chordsFont,
+  },
+};
 
 // Handles most chords. Idk if there are testcases for rlly weird chords
 // but this works fine as is
 const CHORD_REGEX = /^[A-G][b#]?(m|maj|min|dim|aug|sus|add|[0-9])*(?:\/[A-G][b#]?)?$/i;
 
-const containsChords = (line: String) => {
-    const trimmed = line.trim();
+const containsChords = (line: string) => {
+  const trimmed = line.trim();
 
-    // empty lines and stuff like [Chorus], not chords
-    if (!trimmed || trimmed.startsWith('[') || trimmed.startsWith('('))
-        return false;
+  // empty lines and stuff like [Chorus], not chords
+  if (!trimmed || trimmed.startsWith("[") || trimmed.startsWith("(")) return false;
 
-    const tokens = trimmed.split(/\s+/);
-    let chordCount = 0;
-    for (const token of tokens) {
-        // Strip common punctuation around chords like brackets or parentheses
-        const cleanToken = token.replace(/[()[\]{},]/g, '');
+  const tokens = trimmed.split(/\s+/);
+  let chordCount = 0;
+  for (const token of tokens) {
+    // Strip common punctuation around chords like brackets or parentheses
+    const cleanToken = token.replace(/[()[\]{},]/g, "");
 
-        if (CHORD_REGEX.test(cleanToken))
-            chordCount++;
-    }
+    if (CHORD_REGEX.test(cleanToken)) chordCount++;
+  }
 
-    // Check if most of the line are chords
-    const chordRatio = chordCount / tokens.length;
-    return chordRatio >= 0.5;
-}
+  // Check if most of the line are chords
+  const chordRatio = chordCount / tokens.length;
+  return chordRatio >= 0.5;
+};
 
 const chordSectionKeywords = [
-    'VERSE',
-    'PRECHORUS',
-    'PRE-CHORUS',
-    'PRE CHORUS',
-    'CHORUS',
-    'BRIDGE',
-    'INSTRUMENTAL',
-    'INTERLUDE',
-    'TAG',
-    'INTRO',
-    'OUTRO'
-]
+  "VERSE",
+  "PRECHORUS",
+  "PRE-CHORUS",
+  "PRE CHORUS",
+  "CHORUS",
+  "BRIDGE",
+  "INSTRUMENTAL",
+  "INTERLUDE",
+  "TAG",
+  "INTRO",
+  "OUTRO",
+];
 
 // Build the pattern for matching of each
 // chord section keyword
-const chordSectionKeywordPatterns: RegExp[] = []
+const chordSectionKeywordPatterns: RegExp[] = [];
 
 for (let keyword of chordSectionKeywords) {
-    const pattern = '(\\s[\\d]+)?';
-    chordSectionKeywordPatterns.push(new RegExp(keyword + pattern));
+  const pattern = "(\\s[\\d]+)?";
+  chordSectionKeywordPatterns.push(new RegExp(keyword + pattern));
 }
 
 /**
@@ -70,160 +99,223 @@ for (let keyword of chordSectionKeywords) {
  * @param {string} line - the line to check whether it is a chord section
  * @returns null if the line is not a chords section, or the chord section text if it is
  */
-const containsChordsSection = (line: String) => {
-    let lineTrim = line.trim()
-    // Common Case: First and last char are []
-    if (lineTrim[0] == '[' && lineTrim[lineTrim.length-1] == ']') {
-        return lineTrim.substring(1, lineTrim.length - 1)
+const containsChordsSection = (line: string) => {
+  let lineTrim = line.trim();
+  // Common Case: First and last char are []
+  if (lineTrim[0] == "[" && lineTrim[lineTrim.length - 1] == "]") {
+    return lineTrim.substring(1, lineTrim.length - 1);
+  }
+
+  // Second case: checks for any of the defined
+  // keywords and checks if majority of the line
+  // is of this keyword, which identifies the line as a
+  // chord section
+  for (let pattern of chordSectionKeywordPatterns) {
+    let matchedText = lineTrim.toUpperCase().match(new RegExp(pattern));
+
+    if (matchedText && matchedText.length > 0) {
+      // I only really care about one, since
+      // the line would supposedly only have one
+      const word = matchedText[0];
+      const ratio = word.length / lineTrim.length;
+      if (ratio >= 0.75) return word;
     }
-    
-    // Second case: checks for any of the defined
-    // keywords and checks if majority of the line
-    // is of this keyword, which identifies the line as a
-    // chord section
-    for (let pattern of chordSectionKeywordPatterns) {
-        let matchedText = lineTrim.toUpperCase().match(new RegExp(pattern))
+  }
 
-        if (matchedText && matchedText.length > 0) {
-            // I only really care about one, since
-            // the line would supposedly only have one
-            const word = matchedText[0];
-            const ratio = word.length / lineTrim.length;
-            console.log(matchedText, word.length, lineTrim.length, ratio, pattern)
-            if (ratio >= 0.75)
-                return word
-        }
-    }
+  return null;
+};
 
-    return null
-}
-
-// For the sync external store 
+// For the sync external store
 function subscribe(callback: () => void) {
-    window.addEventListener('update-preview', callback);
-    return () => window.removeEventListener('update-preview', callback);
+  window.addEventListener("update-preview", callback);
+  return () => window.removeEventListener("update-preview", callback);
 }
 
 let cachedSnapshot = {
-    title: '',
-    keyNote: '',
-    keyType: '',
-    keySig: '',
-    capo: '',
-    chords: ''
-}
+  title: "",
+  keyNote: "",
+  keyType: "",
+  keySig: "",
+  capo: "",
+  chords: "",
+};
 
 const getRawTextSnapshot = () => {
-    const titleInput = document.getElementById("input-title") as HTMLInputElement | null; 
-    const title = titleInput?.value ?? '';
+  const titleInput = document.getElementById("input-title");
+  const title = titleInput instanceof HTMLInputElement ? titleInput.value : "";
 
-    const textarea = document.getElementById("input-chords") as HTMLTextAreaElement | null; 
-    const chords = textarea?.value ?? '';
+  const textarea = document.getElementById("input-chords");
+  const chords = textarea instanceof HTMLTextAreaElement ? textarea.value : "";
 
-    const keyNoteEl = document.getElementById("input-key-name") as HTMLSelectElement | null; 
-    const keyTypeEl = document.getElementById("input-key-type") as HTMLSelectElement | null; 
+  const keyNoteEl = document.getElementById("input-key-name");
+  const keyTypeEl = document.getElementById("input-key-type");
 
-    const keyNote = keyNoteEl && keyNoteEl.value.trim() ? keyNoteEl.value.trim(): '';
-    const keyType = keyTypeEl && keyTypeEl.value.trim() ? keyTypeEl.value.trim(): '';
-    
-    const keySigTop = document.getElementById("input-signature-top") as HTMLSelectElement | null; 
-    const keySigBot = document.getElementById("input-signature-bot") as HTMLSelectElement | null; 
-    const keySig = keySigTop && keySigTop.value.trim() && keySigBot && keySigBot.value.trim() ? 
-        keySigTop.value.trim() + '/' + keySigBot.value.trim() : '';
+  const keyNote =
+    keyNoteEl instanceof HTMLSelectElement && keyNoteEl && keyNoteEl.value.trim()
+      ? keyNoteEl.value.trim()
+      : "";
+  const keyType =
+    keyTypeEl instanceof HTMLSelectElement && keyTypeEl && keyTypeEl.value.trim()
+      ? keyTypeEl.value.trim()
+      : "";
 
-    const capoInput = document.getElementById("input-capo") as HTMLInputElement | null; 
-    const capo = capoInput && Number(capoInput.value?.trim()) > 0 ? capoInput.value.trim() : '';
-    
-    let cs = cachedSnapshot;
-    if (cs.title !== title || cs.chords !== chords || cs.keyNote !== keyNote  || cs.keyType !== keyType || cs.keySig !== keySig || cs.capo !== capo ) {
-        cachedSnapshot = { title, keyNote, keyType, chords, keySig, capo};
-    }
+  const keySigTop = document.getElementById("input-signature-top");
+  const keySigBot = document.getElementById("input-signature-bot");
+  const keySig =
+    keySigTop instanceof HTMLSelectElement &&
+    keySigBot instanceof HTMLSelectElement &&
+    keySigTop &&
+    keySigTop.value.trim() &&
+    keySigBot &&
+    keySigBot.value.trim()
+      ? keySigTop.value.trim() + "/" + keySigBot.value.trim()
+      : "";
 
-    return cachedSnapshot
+  const capoInput = document.getElementById("input-capo");
+  const capo =
+    capoInput instanceof HTMLInputElement && capoInput && Number(capoInput.value?.trim()) > 0
+      ? capoInput.value.trim()
+      : "";
+
+  let cs = cachedSnapshot;
+  if (
+    cs.title !== title ||
+    cs.chords !== chords ||
+    cs.keyNote !== keyNote ||
+    cs.keyType !== keyType ||
+    cs.keySig !== keySig ||
+    cs.capo !== capo
+  ) {
+    cachedSnapshot = { title, keyNote, keyType, chords, keySig, capo };
+  }
+
+  return cachedSnapshot;
 };
 
 // Component
 const OutputPreview: React.FC<OutputPreviewProps> = ({
-    optPianoChords, optFlatsKeyLabel, optFlatsSongChords, optOverallTransposeFactor, previewRef
+  optPianoChords,
+  optFlatsKeyLabel,
+  optFlatsSongChords,
+  optOverallTransposeFactor,
+  previewRef,
 }) => {
-    const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
-    const titleText = snapshot.title;
-    const keyNote = snapshot.keyNote;
-    const keyType = snapshot.keyType;
-    const keySig = snapshot.keySig;
-    const capo = snapshot.capo;
-    const chordsText = snapshot.chords;
-    const additionalTranspose = optOverallTransposeFactor
-    
-    // Output options
+  const snapshot = useSyncExternalStore(subscribe, getRawTextSnapshot);
+  const titleText = snapshot.title;
+  const keyNote = snapshot.keyNote;
+  const keyType = snapshot.keyType;
+  const keySig = snapshot.keySig;
+  const capo = snapshot.capo;
+  const chordsText = snapshot.chords;
+  const additionalTranspose = optOverallTransposeFactor;
 
-    const renderPreview = () => {
-        let preview: React.JSX.Element[] = [];
+  // Output options
 
-        if (titleText)
-            preview.push(<h3 key='title' style={outputstyles.h3}>{capo && !optPianoChords ? titleText + ' (CAPO ' + capo + ')' : titleText}</h3>)
-        if (keyNote && keyType) {
-            let note = keyNote;
-            if (additionalTranspose)
-                note = transposeChord(note, additionalTranspose) ?? '';
+  const renderPreview = (): React.JSX.Element[] => {
+    let preview: React.JSX.Element[] = [];
 
-            note = optFlatsKeyLabel ? sharpToFlat(note) : note;
-            preview.push(<p key='key' style={outputstyles.text}>Key: {note + ' ' + keyType}</p>)
-        
+    if (titleText)
+      preview.push(
+        <h3 key="title" style={outputstyles.h3}>
+          {capo && !optPianoChords ? titleText + " (CAPO " + capo + ")" : titleText}
+        </h3>,
+      );
+    if (keyNote && keyType) {
+      let note = keyNote;
+      if (additionalTranspose) note = transposeChord(note, additionalTranspose) ?? "";
+
+      note = optFlatsKeyLabel ? sharpToFlat(note) : note;
+      preview.push(
+        <p key="key" style={outputstyles.text}>
+          Key: {note + " " + keyType}
+        </p>,
+      );
+    }
+    if (keySig)
+      preview.push(
+        <p key="keySig" style={outputstyles.text}>
+          {keySig}
+        </p>,
+      );
+    if (capo && !optPianoChords)
+      preview.push(
+        <p key="capo" style={outputstyles.text}>
+          Capo {capo}
+        </p>,
+      );
+
+    // Add a space before chords IFF title/other stuff
+    // precede the chords
+    if (preview.length > 0) preview.push(<br key="top-br" />);
+
+    if (chordsText) {
+      let chords = chordsText.split("\n").flatMap((line, index) => {
+        if (line.trim() === "") {
+          return [];
         }
-        if (keySig)
-            preview.push(<p key='keySig' style={outputstyles.text}>{keySig}</p>)
-        if (capo && !optPianoChords)
-            preview.push(<p key='capo' style={outputstyles.text}>Capo {capo}</p>)
 
-        // Add a space before chords IFF title/other stuff
-        // precede the chords
-        if (preview.length > 0)
-            preview.push(<br key='top-br' />);
+        const chordSectionLabel: string = containsChordsSection(line) ?? "";
+        if (chordSectionLabel) {
+          let spaces: React.JSX.Element[] = [];
 
-        if (chordsText) {
-            let chords = chordsText.split('\n').map((line, index) => {
-                if (line.trim() === '') {
-                    return <br key={index} />;
-                }
-                
-                const chordSectionLabel: string = containsChordsSection(line) ?? '';
-                if (chordSectionLabel) {
-                    return <p key={index} style={outputstyles.section}>{chordSectionLabel.toUpperCase()}</p>;
-                }
-                else if (containsChords(line)) {
-                    line = optOverallTransposeFactor ? transposeLine(line, optOverallTransposeFactor) : line;
-                    if (optPianoChords && Number(capo) > 0) {
-                        let t = transposeLine(line, Number(capo), optFlatsSongChords)
-                        return <p key={index} style={outputstyles.chords}>{t}</p>;
-                    }
-                    else if (optFlatsSongChords) {
-                        let flatsLine = line;
-                        let tokens = flatsLine.split(/[\s]+/g);
-                        for (let token of tokens) {
-                            if (token === "" || token.length < 1) continue
-                            flatsLine = flatsLine.replace(token, sharpToFlatChord(token))
-                        }
-                        return <p key={index} style={outputstyles.chords}>{flatsLine}</p>;
-                    }
-                    else
-                        return <p key={index} style={outputstyles.chords}>{line}</p>;
-                }
-                return <p key={index} style={outputstyles.text}>{line}</p>;
-            });
-            preview = preview.concat(chords);
+          let spaceCount = 2;
+          for (let i = 0; i < spaceCount; i++) {
+            spaces.push(<br key={`space-${index}-${i}`} />);
+          }
+
+          return spaces.concat([
+            <p key={index} style={outputstyles.section}>
+              {chordSectionLabel.toUpperCase()}
+            </p>,
+          ]);
+        } else if (containsChords(line)) {
+          line = optOverallTransposeFactor ? transposeLine(line, optOverallTransposeFactor) : line;
+          if (optPianoChords && Number(capo) > 0) {
+            let t = transposeLine(line, Number(capo), optFlatsSongChords);
+            return (
+              <p key={index} style={outputstyles.chords}>
+                {t}
+              </p>
+            );
+          } else if (optFlatsSongChords) {
+            let flatsLine = line;
+            let tokens = flatsLine.split(/[\s]+/g);
+            for (let token of tokens) {
+              if (token === "" || token.length < 1) continue;
+              flatsLine = flatsLine.replace(token, sharpToFlatChord(token));
+            }
+            return (
+              <p key={index} style={outputstyles.chords}>
+                {flatsLine}
+              </p>
+            );
+          } else {
+            return (
+              <p key={index} style={outputstyles.chords}>
+                {line}
+              </p>
+            );
+          }
         }
-        
 
-        return preview;
-    };
+        return (
+          <p key={index} style={outputstyles.text}>
+            {line}
+          </p>
+        );
+      });
 
-    return (
-        <span id="output-preview" className="output-preview" ref={previewRef}>
-            { renderPreview() }
-        </span>
+      preview = preview.concat(chords);
+    }
 
-    )
-}
+    return preview;
+  };
+
+  return (
+    <span id="output-preview" className="output-preview" ref={previewRef}>
+      {renderPreview()}
+    </span>
+  );
+};
 
 export default OutputPreview;
