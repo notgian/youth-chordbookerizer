@@ -1,4 +1,4 @@
-import { containsChords, Chord, Notes, assureSharp, halfStep, wholeStep } from "./chords";
+import { containsChords, Chord, Notes, assureSharp, halfStep, wholeStep, nSteps } from "./chords";
 import type { Note, ChordSuffix } from "./chords";
 
 const noteSteps = ["W", "H"] as const;
@@ -56,42 +56,104 @@ for (const rawNote of Notes) {
     }
   }
 
-  minorKeys[note] = keyChords;
+  minorKeys[`${note}m`] = keyChords;
 }
 
+const keyWeightsMajors = [1, 0.2, 0.09, 0.45, 0.6, 0.25, 0.07];
+const keyWeightsMinors = [1, 0.22, 0.18, 0.38, 0.65, 0.33, 0.18];
+
 const accidentalSymbols = new Set(["#", "b"]);
-export const extractChordLines = (rawChords: string): Chord[][] => {
+
+export const extractChordLines = (
+  rawChords: string,
+  transposeBy = 0,
+  simplify = false,
+): Chord[] => {
   const chordLines = rawChords
     .split("\n")
     .filter((line) => containsChords(line))
-    .map((line) => {
+    .flatMap((line) => {
       const tokens = line.trim().split(/\s+/);
 
       return tokens
         .filter((token) => token.length > 0)
         .map((chord) => {
           const chordTrim = chord.trim();
-          if (chordTrim.length === 1) {
-            return new Chord(chordTrim as Note, "");
-          }
 
-          const isAccidental = accidentalSymbols.has(chordTrim.charAt(1));
-          const note = isAccidental ? chordTrim.slice(0, 2) : chordTrim.charAt(0);
-          const suffix = isAccidental ? chordTrim.slice(2) : chordTrim.slice(1);
+          const hasSuffix = chordTrim.length > 1;
+          const isAccidental = hasSuffix && accidentalSymbols.has(chordTrim.charAt(1));
 
-          return new Chord(assureSharp(note as Note), suffix as ChordSuffix);
+          const noteRaw = (
+            !hasSuffix ? chordTrim : isAccidental ? chordTrim.slice(0, 2) : chordTrim.charAt(0)
+          ) as Note;
+
+          const suffixRaw = isAccidental ? chordTrim.slice(2) : chordTrim.slice(1);
+
+          const simpleMatch = /(m|dim)$/.exec(suffixRaw);
+          const simpleSuffix = simpleMatch ? simpleMatch[0] : "";
+
+          const suffix = simplify ? simpleSuffix : suffixRaw;
+
+          const note = nSteps(assureSharp(noteRaw), transposeBy);
+          return new Chord(assureSharp(note), suffix as ChordSuffix);
         });
     });
 
   return chordLines;
 };
 
-function main() {
-  // const testLines = "C  D  Em  F\nNot chords Line\nA   F#m    D";
-  // const chordLines = extractChordLines(testLines);
-  // for (const line of chordLines) {
-  //   console.log(line.toString());
-  // }
-}
+type KeyPrediction = {
+  musicKey: string;
+  score: number;
+};
 
-main();
+export const predictKey = (
+  rawChords: string,
+  capoRaw = 0,
+  predictions = 1,
+  simplify = true,
+): KeyPrediction[] => {
+  const capo = Math.max(capoRaw, 0);
+  const chordLines = extractChordLines(rawChords, capo, simplify);
+
+  // const keyScores = new Map();
+  const keyScores: KeyPrediction[] = [];
+
+  for (const musicKey of Object.keys(majorKeys)) {
+    const musicKeyChords = majorKeys[musicKey];
+    let score = 0;
+
+    for (const chord of chordLines) {
+      for (let i = 0; i < musicKeyChords.length; i++) {
+        const keyChord = musicKeyChords[i];
+        if (keyChord.toString() === chord.toString()) {
+          score += keyWeightsMajors[i];
+          break;
+        }
+      }
+    }
+    keyScores.push({ musicKey, score });
+  }
+
+  for (const musicKey of Object.keys(minorKeys)) {
+    const musicKeyChords = minorKeys[musicKey];
+    let score = 0;
+
+    for (const chord of chordLines) {
+      for (let i = 0; i < musicKeyChords.length; i++) {
+        const keyChord = musicKeyChords[i];
+        if (keyChord.toString() === chord.toString()) {
+          score += keyWeightsMinors[i];
+          break;
+        }
+      }
+    }
+    keyScores.push({ musicKey, score });
+  }
+
+  keyScores.sort((a, b) => b.score - a.score);
+
+  const prediction_slice = predictions < 1 ? 1 : Math.min(24, predictions);
+
+  return keyScores.slice(0, prediction_slice);
+};

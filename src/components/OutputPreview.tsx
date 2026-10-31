@@ -3,6 +3,7 @@ import { Fragment, useSyncExternalStore } from "react";
 
 import type { OutputPreviewProps } from "../types";
 import { containsChords, containsChordsSection } from "../utils/chords";
+import { predictKey } from "../utils/key-detector.ts";
 import {
   sharpToFlat,
   sharpToFlatChord,
@@ -90,8 +91,8 @@ const getRawTextSnapshot = () => {
   const keySigTop = document.querySelector("#input-signature-top");
   const keySigBot = document.querySelector("#input-signature-bot");
   const keySig =
-    keySigTop instanceof HTMLSelectElement &&
-    keySigBot instanceof HTMLSelectElement &&
+    keySigTop instanceof HTMLInputElement &&
+    keySigBot instanceof HTMLInputElement &&
     keySigTop &&
     keySigTop.value.trim() &&
     keySigBot &&
@@ -151,14 +152,22 @@ const OutputPreview: React.FC<OutputPreviewProps> = ({
     }
     if (keyNote && keyType) {
       let note = keyNote;
-      if (additionalTranspose) {
-        note = transposeChord(note, additionalTranspose) ?? "";
+      // oxlint-disable-next-line eslint/no-useless-assignment
+      let fullKey = "";
+
+      if (note === "AUTO") {
+        fullKey = predictKey(chordsText, Number(capo) + additionalTranspose)[0].musicKey;
+      } else {
+        if (additionalTranspose) {
+          note = transposeChord(note, additionalTranspose) ?? "";
+        }
+        note = optFlatsKeyLabel ? sharpToFlat(note) : note;
+        fullKey = `${note} ${keyType}`;
       }
 
-      note = optFlatsKeyLabel ? sharpToFlat(note) : note;
       preview.push(
         <p key="key" style={outputstyles.text}>
-          Key: {`${note} ${keyType}`}
+          Key: {fullKey}
         </p>,
       );
     }

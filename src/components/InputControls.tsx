@@ -16,6 +16,12 @@ const timeSignatureClipValues = (e: React.ChangeEvent<HTMLInputElement>): void =
   }
 };
 
+const keySelectToggles = (e: React.ChangeEvent<HTMLSelectElement>): void => {
+  const val = e.target.value;
+  const select = document.querySelector("#input-key-type") as HTMLSelectElement;
+  select.disabled = val === "AUTO";
+};
+
 const InputControls: React.FC<InputProps> = ({ updatePreview }) => {
   return (
     <div className="input-controls">
@@ -24,10 +30,17 @@ const InputControls: React.FC<InputProps> = ({ updatePreview }) => {
 
       <label>Song Key: </label>
       <span className="input-key">
-        <select onChange={updatePreview} id="input-key-name">
+        <select
+          onChange={(e) => {
+            updatePreview(e);
+            keySelectToggles(e);
+          }}
+          id="input-key-name"
+        >
           <option value="" disabled selected>
             Key
           </option>
+          <option value="AUTO">Auto</option>
           <option value="C">C</option>
           <option value="C#">C#/Db</option>
           <option value="D">D</option>
