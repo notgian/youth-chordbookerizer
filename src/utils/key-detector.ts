@@ -83,9 +83,17 @@ export const extractChordLines = (
           const hasSuffix = chordTrim.length > 1;
           const isAccidental = hasSuffix && accidentalSymbols.has(chordTrim.charAt(1));
 
-          const noteRaw = (
-            !hasSuffix ? chordTrim : isAccidental ? chordTrim.slice(0, 2) : chordTrim.charAt(0)
-          ) as Note;
+          let rawNote: string;
+
+          if (!hasSuffix) {
+            rawNote = chordTrim;
+          } else if (isAccidental) {
+            rawNote = chordTrim.slice(0, 2);
+          } else {
+            rawNote = chordTrim.charAt(0);
+          }
+
+          const noteRaw = rawNote as Note;
 
           const suffixRaw = isAccidental ? chordTrim.slice(2) : chordTrim.slice(1);
 
