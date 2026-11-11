@@ -26,7 +26,7 @@ export type OutputPreviewProps = {
   optFlatsSongChords: boolean;
   optOverallTransposeFactor: number;
 
-  previewRef: RefObject<HTMLElement | undefined>;
+  previewRef: RefObject<HTMLSpanElement>;
 };
 
 export type OutputControlProps = {
@@ -35,5 +35,5 @@ export type OutputControlProps = {
   optFlatsSongChordsController: ReactStateController<boolean>;
   optOverallTransposeFactorController: ReactStateController<number>;
 
-  previewRef: RefObject<HTMLElement | undefined>;
+  previewRef: RefObject<HTMLSpanElement>;
 };
