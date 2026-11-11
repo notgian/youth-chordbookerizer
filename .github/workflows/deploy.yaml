@@ -3,7 +3,7 @@ name: Rsbuild Deployment
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['main']
+    branches: ["main"]
   # Allows you to run this workflow manually from the actions tab
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ permissions:
 
 # Allow only one concurrent deployment
 concurrency:
-  group: 'pages'
+  group: "pages"
   cancel-in-progress: false
 
 jobs:
@@ -26,19 +26,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Use Node.js
-        uses: actions/setup-node@v6
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          package-manager-cache: false
+          bun-version: latest
 
-      # If you use other package managers like yarn or pnpm,
-      # you will need to install them first
       - name: Install dependencies
-        run: npm i
+        run: bun install
 
       - name: Build
-        run: npm run build
+        run: bun run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
@@ -46,7 +43,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: './dist'
+          path: "./dist"
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -1,45 +1,60 @@
-import InputArea from './InputArea'
-import OutputPreview from './OutputPreview'
-import { InputControls } from './InputControls.tsx';
-import { OutputControls } from './OutputControls.tsx';
-import { useRef, useState } from 'react';
+import { useRef, useState } from "react";
 
-const Chordbookerizer = () => {
-    const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
-    const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
-    const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
-    // For copying
-    const previewRef = useRef<HTMLElement>(null);
+import { ReactStateController } from "../types.ts";
+import InputArea from "./InputArea";
+import { InputControls } from "./InputControls.tsx";
+import { OutputControls } from "./OutputControls.tsx";
+import OutputPreview from "./OutputPreview";
 
-    const updatePreview = () => {
-        window.dispatchEvent(new CustomEvent('update-preview'));
-    } 
+const updatePreview = () => {
+  globalThis.dispatchEvent(new CustomEvent("update-preview"));
+};
 
-    return (
-        <div className="chordbookerizer">
-            <h3>Song Info/Chords</h3>
-            <h3>Preview</h3>
+const Chordbookerizer = (): React.JSX.Element => {
+  const [showPianoChords, setShowPianoChords] = useState<boolean>(false);
+  const [showFlatsKeyLabel, setShowFlatsKeyLabel] = useState<boolean>(false);
+  const [showFlatsSongChords, setShowFlatsSongChords] = useState<boolean>(false);
+  const [overallTransposeFactor, setOverallTransposeFactor] = useState<number>(0);
+  // For copying
+  const previewRef = useRef<HTMLElement>(undefined);
 
-            <InputControls updatePreview={updatePreview}/>
-            <OutputControls 
-                optPianoChords={showPianoChords}
-                optFlatsKeyLabel={showFlatsKeyLabel}
-                optFlatsSongChords={showFlatsSongChords}
-                setOptPianoChords={setShowPianoChords}
-                setOptFlatsKeyLabel={setShowFlatsKeyLabel}
-                setOptFlatsSongChords={setShowFlatsSongChords}
-                previewRef={previewRef}
-            />
+  return (
+    <div className="chordbookerizer">
+      <span>
+        <h3>Song Info/Chords</h3>
+        <hr />
+      </span>
 
-            <InputArea updatePreview={updatePreview}/>
-            <OutputPreview
-                optPianoChords={showPianoChords}
-                optFlatsKeyLabel={showFlatsKeyLabel}
-                optFlatsSongChords={showFlatsSongChords}
-                previewRef={previewRef}
-            />
-        </div>
-    )
-}
+      <span>
+        <h3>Preview</h3>
+        <hr />
+      </span>
 
-export default Chordbookerizer
+      <InputControls updatePreview={updatePreview} />
+      <OutputControls
+        optPianoChordsController={new ReactStateController(showPianoChords, setShowPianoChords)}
+        optFlatsKeyLabelController={
+          new ReactStateController(showFlatsKeyLabel, setShowFlatsKeyLabel)
+        }
+        optFlatsSongChordsController={
+          new ReactStateController(showFlatsSongChords, setShowFlatsSongChords)
+        }
+        optOverallTransposeFactorController={
+          new ReactStateController(overallTransposeFactor, setOverallTransposeFactor)
+        }
+        previewRef={previewRef}
+      />
+
+      <InputArea updatePreview={updatePreview} />
+      <OutputPreview
+        optPianoChords={showPianoChords}
+        optFlatsKeyLabel={showFlatsKeyLabel}
+        optFlatsSongChords={showFlatsSongChords}
+        optOverallTransposeFactor={overallTransposeFactor}
+        previewRef={previewRef}
+      />
+    </div>
+  );
+};
+
+export default Chordbookerizer;

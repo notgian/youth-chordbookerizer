@@ -1,26 +1,39 @@
 import type { RefObject } from "react";
 
-export interface InputProps {
-    updatePreview: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
+export class ReactStateController<T> {
+  private readonly setFunc: (e: T) => void;
+  value: T;
+
+  constructor(myvar: T, func: (e: T) => void) {
+    this.value = myvar;
+    this.setFunc = func;
+  }
+
+  set(val: T): void {
+    this.setFunc(val);
+  }
 }
 
-export interface OutputPreviewProps {
-    optPianoChords: boolean;
-    optFlatsKeyLabel: boolean;
-    optFlatsSongChords: boolean;
+export type InputProps = {
+  updatePreview: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => void;
+};
 
-    previewRef: RefObject<HTMLElement | null>;
-}
+export type OutputPreviewProps = {
+  optPianoChords: boolean;
+  optFlatsKeyLabel: boolean;
+  optFlatsSongChords: boolean;
+  optOverallTransposeFactor: number;
 
-export interface OutputControlProps {
-    setOptPianoChords: (e: boolean) => void;
-    setOptFlatsKeyLabel: (e: boolean) => void;
-    setOptFlatsSongChords: (e: boolean) => void;
+  previewRef: RefObject<HTMLSpanElement>;
+};
 
-    optPianoChords: boolean;
-    optFlatsKeyLabel: boolean;
-    optFlatsSongChords: boolean;
+export type OutputControlProps = {
+  optPianoChordsController: ReactStateController<boolean>;
+  optFlatsKeyLabelController: ReactStateController<boolean>;
+  optFlatsSongChordsController: ReactStateController<boolean>;
+  optOverallTransposeFactorController: ReactStateController<number>;
 
-    previewRef: RefObject<HTMLElement | null>;
-}
-
+  previewRef: RefObject<HTMLSpanElement>;
+};
